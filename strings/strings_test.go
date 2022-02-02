@@ -11,6 +11,7 @@
 package strings
 
 import (
+	"sort"
 	"testing"
 )
 
@@ -44,6 +45,11 @@ func TestFindAnagrams(t *testing.T) {
 			p:      "ab",
 			output: []int{0, 1, 2},
 		},
+		{
+			s:      "baa",
+			p:      "aa",
+			output: []int{1},
+		},
 	}
 
 	for _, result := range results {
@@ -53,4 +59,51 @@ func TestFindAnagrams(t *testing.T) {
 				result.s, result.p, result.output, indexs)
 		}
 	}
+}
+
+func stringListEqual(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	sort.Strings(a)
+	sort.Strings(b)
+	for i := 0; i < len(a); i++ {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func TestLetterCombinations(t *testing.T) {
+
+	type letterResult struct {
+		digits string
+		output []string
+	}
+
+	results := []*letterResult{
+		{
+			digits: "23",
+			output: []string{"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"},
+		},
+		{
+			digits: "",
+			output: []string{},
+		},
+		{
+			digits: "2",
+			output: []string{"a", "b", "c"},
+		},
+	}
+
+	for _, result := range results {
+		combs := LetterCombinations(result.digits)
+		if !stringListEqual(combs, result.output) {
+			t.Errorf("digits:%+v output:%+v combs:%+v",
+				result.digits, result.output, combs)
+		}
+
+	}
+
 }
