@@ -58,7 +58,8 @@ func TestEquals(t *testing.T) {
 		n1 := New(result.a...)
 		n2 := New(result.b...)
 		if equal := n1.Equal(n2); equal != result.result {
-			t.Errorf("node not equal. a:%+v b:%+v equal:%v result:%v", result.a, result.b, equal, result.result)
+			t.Errorf("node not equal. a:%+v b:%+v equal:%v result:%v",
+				result.a, result.b, equal, result.result)
 		}
 	}
 
@@ -141,7 +142,7 @@ func TestReverse(t *testing.T) {
 		n1 := New(result.a...)
 		l1 := n1.Dump()
 
-		n2 := NodeReverse(n1)
+		n2 := ListNodeReverse(n1)
 		l2 := n2.Dump()
 		l3 := listReverse(l2)
 
@@ -189,7 +190,7 @@ func TestReverseN(t *testing.T) {
 		n1 := New(result.a...)
 		l1 := n1.Dump()
 
-		n2 := NodeReverseN(n1, result.n)
+		n2 := ListNodeReverseN(n1, result.n)
 		l2 := n2.Dump()
 
 		if !listEqual(l2, result.b) {
@@ -238,7 +239,7 @@ func TestReverseBetween(t *testing.T) {
 		n1 := New(result.a...)
 		l1 := n1.Dump()
 
-		n2 := NodeReverseBetween(n1, result.left, result.right)
+		n2 := ListNodeReverseBetween(n1, result.left, result.right)
 		l2 := n2.Dump()
 
 		if !listEqual(l2, result.b) {
@@ -246,6 +247,49 @@ func TestReverseBetween(t *testing.T) {
 				l1, result.left, result.right, l2, result.b)
 		}
 
+	}
+
+}
+
+func TestListNodeReorder(t *testing.T) {
+	type reorderResult struct {
+		a []interface{}
+		b []interface{}
+	}
+
+	results := []*reorderResult{
+		{
+			a: []interface{}{1, 2, 3, 4},
+			b: []interface{}{1, 4, 2, 3},
+		},
+		{
+			a: []interface{}{1, 2, 3, 4, 5},
+			b: []interface{}{1, 5, 2, 4, 3},
+		},
+		{
+			a: []interface{}{1},
+			b: []interface{}{1},
+		},
+		{
+			a: []interface{}{1, 2},
+			b: []interface{}{1, 2},
+		},
+		{
+			a: []interface{}{1, 2, 3},
+			b: []interface{}{1, 3, 2},
+		},
+		{
+			a: []interface{}{},
+			b: []interface{}{},
+		},
+	}
+
+	for _, result := range results {
+		reorder := ListNodeReorder(New(result.a...))
+		if equal := reorder.Equal(New(result.b...)); !equal {
+			t.Errorf("node not equal. a:%+v b:%+v reorder:%+v equal:%v",
+				result.a, result.b, reorder, equal)
+		}
 	}
 
 }

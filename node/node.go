@@ -10,44 +10,44 @@
 
 package reverse
 
-type Node struct {
-	Value interface{}
-	Next  *Node
+type ListNode struct {
+	Val  interface{}
+	Next *ListNode
 }
 
-func New(a ...interface{}) *Node {
+func New(a ...interface{}) *ListNode {
 	if len(a) == 0 {
 		return nil
 	}
 
-	head := new(Node)
+	head := new(ListNode)
 
 	node := head
 	for index, v := range a {
 		if index != 0 {
-			node.Next = new(Node)
+			node.Next = new(ListNode)
 			node = node.Next
 		}
-		node.Value = v
+		node.Val = v
 	}
 	return head
 }
 
-func (n *Node) Dump() []interface{} {
+func (n *ListNode) Dump() []interface{} {
 	values := make([]interface{}, 0)
 
 	node := n
 	for node != nil {
-		values = append(values, node.Value)
+		values = append(values, node.Val)
 		node = node.Next
 	}
 	return values
 }
 
-func (n *Node) Equal(src *Node) bool {
+func (n *ListNode) Equal(src *ListNode) bool {
 	dst := n
 	for dst != nil && src != nil {
-		if dst.Value != src.Value {
+		if dst.Val != src.Val {
 			return false
 		}
 		dst = dst.Next
@@ -56,20 +56,20 @@ func (n *Node) Equal(src *Node) bool {
 	return (dst == nil) && (src == nil)
 }
 
-func NodeReverse(head *Node) *Node {
+func ListNodeReverse(head *ListNode) *ListNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
 
-	last := NodeReverse(head.Next)
+	last := ListNodeReverse(head.Next)
 	head.Next.Next = head
 	head.Next = nil
 	return last
 }
 
-var suffix *Node
+var suffix *ListNode
 
-func NodeReverseN(head *Node, n int) *Node {
+func ListNodeReverseN(head *ListNode, n int) *ListNode {
 	if head == nil || head.Next == nil {
 		suffix = nil
 		return head
@@ -78,17 +78,29 @@ func NodeReverseN(head *Node, n int) *Node {
 		suffix = head.Next
 		return head
 	}
-	last := NodeReverseN(head.Next, n-1)
+	last := ListNodeReverseN(head.Next, n-1)
 	head.Next.Next = head
 	head.Next = suffix
 	return last
 }
 
-func NodeReverseBetween(head *Node, left int, right int) *Node {
+func ListNodeReverseBetween(head *ListNode, left int, right int) *ListNode {
 	if left == 1 {
-		return NodeReverseN(head, right)
+		return ListNodeReverseN(head, right)
 	}
 
-	head.Next = NodeReverseBetween(head.Next, left-1, right-1)
+	head.Next = ListNodeReverseBetween(head.Next, left-1, right-1)
+	return head
+}
+
+// leetcode 143: https://leetcode.com/problems/reorder-list/
+// input: 1 -> 2 -> 3 -> n-2 -> n-1 -> n
+// output: 1 -> n -> 2 -> n-1 -> 3 -> n-2
+func ListNodeReorder(head *ListNode) *ListNode {
+	node := head
+	for node != nil && node.Next != nil {
+		node.Next = ListNodeReverse(node.Next)
+		node = node.Next
+	}
 	return head
 }
