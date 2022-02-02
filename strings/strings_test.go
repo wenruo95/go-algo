@@ -100,10 +100,60 @@ func TestLetterCombinations(t *testing.T) {
 	for _, result := range results {
 		combs := LetterCombinations(result.digits)
 		if !stringListEqual(combs, result.output) {
-			t.Errorf("digits:%+v output:%+v combs:%+v",
+			t.Errorf("letter_combineations. digits:%+v output:%+v combs:%+v",
 				result.digits, result.output, combs)
 		}
 
 	}
 
+}
+
+func TestRegularIsMatch(t *testing.T) {
+	type regularResult struct {
+		s     string
+		p     string
+		match bool
+	}
+
+	results := []*regularResult{
+		{
+			s:     "aa",
+			p:     "a",
+			match: false,
+			// Explanation: "a" does not match the entire string "aa".
+		},
+		{
+			s:     "aa",
+			p:     "a*",
+			match: true,
+			// Explanation: '*' means zero or more of the preceding element, 'a'. Therefore, by repeating 'a' once, it becomes "aa".
+		},
+		{
+			s:     "ab",
+			p:     ".*",
+			match: true,
+			// Explanation: ".*" means "zero or more (*) of any character (.)".
+		},
+		{
+			s:     "aab",
+			p:     "c*a*b",
+			match: true,
+		},
+		{
+			s:     "mississippi",
+			p:     "mis*is*p*.",
+			match: false,
+		},
+		{
+			s:     "aaa",
+			p:     "ab*a*c*a",
+			match: true,
+		},
+	}
+
+	for _, result := range results {
+		if match := RegularIsMatch(result.s, result.p); match != result.match {
+			t.Errorf("regular_is_match result:%+v match:%v", result, match)
+		}
+	}
 }

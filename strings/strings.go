@@ -10,6 +10,10 @@
 
 package strings
 
+import (
+	"strconv"
+)
+
 // leetcode 438: https://leetcode.com/problems/find-all-anagrams-in-a-string/
 func FindAnagrams(s string, p string) []int {
 	if len(s) < len(p) {
@@ -84,4 +88,53 @@ func LetterCombinations(digits string) []string {
 	}
 
 	return fn(indexs, 0)
+}
+
+// leetcode 10: https://leetcode.com/problems/regular-expression-matching/
+func RegularIsMatch(s string, p string) bool {
+	memo := make(map[string]bool)
+
+	var regularIsMatch func(string, int, string, int) bool
+	regularIsMatch = func(s string, index int, p string, pindex int) bool {
+		if len(p) == pindex {
+			return len(s) == index
+		}
+		if len(s) == index {
+			if (len(p)-pindex)%2 == 1 {
+				return false
+			}
+			for i := pindex; i+1 < len(p); i = i + 2 {
+				if p[i+1] != '*' {
+					return false
+				}
+			}
+			return true
+		}
+
+		key := strconv.Itoa(index) + "_" + strconv.Itoa(pindex)
+		if value, exist := memo[key]; exist {
+			return value
+		}
+
+		var match bool
+		if s[index] == p[pindex] || p[pindex] == '.' {
+			if pindex+1 < len(p) && p[pindex+1] == '*' {
+				match = regularIsMatch(s, index, p, pindex+2) || // 0次
+					regularIsMatch(s, index+1, p, pindex) // 1次 或 多次
+			} else {
+				match = regularIsMatch(s, index+1, p, pindex+1)
+			}
+		} else {
+			if pindex+1 < len(p) && p[pindex+1] == '*' {
+				match = regularIsMatch(s, index, p, pindex+2)
+			} else {
+				match = false
+			}
+		}
+
+		memo[key] = match
+		return match
+	}
+
+	return regularIsMatch(s, 0, p, 0)
 }
