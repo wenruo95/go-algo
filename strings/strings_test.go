@@ -157,3 +157,41 @@ func TestRegularIsMatch(t *testing.T) {
 		}
 	}
 }
+
+func TestStrStr(t *testing.T) {
+	type strResult struct {
+		haystack string
+		needle   string
+		index    int
+	}
+
+	results := []*strResult{
+		{
+			haystack: "hello",
+			needle:   "ll",
+			index:    2,
+		},
+		{
+			haystack: "aaaaa",
+			needle:   "bba",
+			index:    -1,
+		},
+		{
+			haystack: "",
+			needle:   "",
+			index:    0,
+		},
+		{
+			haystack: "aaa",
+			needle:   "aaaa",
+			index:    -1,
+		},
+	}
+
+	for _, result := range results {
+		if index := StrStr(result.haystack, result.needle); index != result.index {
+			t.Errorf("str_str result:%+v index:%v", result, index)
+		}
+	}
+
+}

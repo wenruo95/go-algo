@@ -9,13 +9,3 @@
 ================================================================*/
 
 package logic
-
-func QuickSort(nums []int) []int {
-
-	return nums
-}
-
-func findPriv(nums []int, left int, right int) int {
-	return 0
-
-}

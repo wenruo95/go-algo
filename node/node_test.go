@@ -338,3 +338,70 @@ func TestRemoveNThFromEnd(t *testing.T) {
 	}
 
 }
+
+func TestMergeTwoLists(t *testing.T) {
+	type mergeResult struct {
+		list1  []interface{}
+		list2  []interface{}
+		output []interface{}
+	}
+
+	results := []*mergeResult{
+		{
+			list1:  []interface{}{1, 2, 4},
+			list2:  []interface{}{1, 3, 4},
+			output: []interface{}{1, 1, 2, 3, 4, 4},
+		},
+		{
+			list1:  []interface{}{},
+			list2:  []interface{}{},
+			output: []interface{}{},
+		},
+		{
+
+			list1:  []interface{}{},
+			list2:  []interface{}{0},
+			output: []interface{}{0},
+		},
+	}
+
+	for _, result := range results {
+		output := MergeTwoLists(New(result.list1...), New(result.list2...))
+		if !listEqual(output.Dump(), result.output) {
+			t.Errorf("merge_two_lists result:%+v output:%+v", result, output.Dump())
+		}
+	}
+}
+
+func TestMergeKLists(t *testing.T) {
+	type mergeKResult struct {
+		lists  [][]interface{}
+		output []interface{}
+	}
+
+	results := []*mergeKResult{
+		{
+			lists: [][]interface{}{
+				{1, 4, 5},
+				{1, 3, 4},
+				{2, 6},
+			},
+			output: []interface{}{1, 1, 2, 3, 4, 4, 5, 6},
+		},
+		{
+			lists:  [][]interface{}{},
+			output: []interface{}{},
+		},
+	}
+
+	for _, result := range results {
+		lists := make([]*ListNode, 0)
+		for i := 0; i < len(result.lists); i++ {
+			lists = append(lists, New(result.lists[i]...))
+		}
+		if output := MergeKLists(lists); !output.Equal(New(result.output...)) {
+			t.Errorf("merge_k_lists result:%+v output:%+v", result, output.Dump())
+		}
+
+	}
+}

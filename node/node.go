@@ -140,3 +140,61 @@ func RemoveNthFromEnd(head *ListNode, n int) *ListNode {
 	deleted.Next = nil
 	return head
 }
+
+// leetcode 21: https://leetcode.com/problems/merge-two-sorted-lists/
+func MergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+	if list1 == nil {
+		return list2
+	}
+	if list2 == nil {
+		return list1
+	}
+
+	var head, node *ListNode
+	for list1 != nil && list2 != nil {
+		var curNode *ListNode
+		if list1.Val.(int) < list2.Val.(int) {
+			curNode = list1
+			list1 = list1.Next
+		} else {
+			curNode = list2
+			list2 = list2.Next
+		}
+
+		if head == nil {
+			head = curNode
+			node = curNode
+			continue
+		}
+
+		node.Next = curNode
+		node = node.Next
+	}
+
+	if list1 != nil {
+		node.Next = list1
+		node = node.Next
+	}
+	if list2 != nil {
+		node.Next = list2
+		node = node.Next
+	}
+
+	return head
+}
+
+// leetcode 23: https://leetcode.com/problems/merge-k-sorted-lists/
+func MergeKLists(lists []*ListNode) *ListNode {
+	if len(lists) == 0 {
+		return nil
+	}
+	if len(lists) == 1 {
+		return lists[0]
+	}
+
+	node := lists[0]
+	for i := 1; i < len(lists); i++ {
+		node = MergeTwoLists(node, lists[i])
+	}
+	return node
+}

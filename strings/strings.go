@@ -138,3 +138,23 @@ func RegularIsMatch(s string, p string) bool {
 
 	return regularIsMatch(s, 0, p, 0)
 }
+
+// leetcode 28: https://leetcode.com/problems/implement-strstr/
+func StrStr(haystack string, needle string) int {
+	if len(needle) == 0 {
+		return 0
+	}
+
+	for index := 0; index < len(haystack); index++ {
+		var nindex int
+		for index+nindex < len(haystack) && nindex < len(needle) &&
+			haystack[index+nindex] == needle[nindex] {
+			nindex = nindex + 1
+		}
+
+		if nindex == len(needle) {
+			return index
+		}
+	}
+	return -1
+}
