@@ -94,13 +94,49 @@ func ListNodeReverseBetween(head *ListNode, left int, right int) *ListNode {
 }
 
 // leetcode 143: https://leetcode.com/problems/reorder-list/
-// input: 1 -> 2 -> 3 -> n-2 -> n-1 -> n
-// output: 1 -> n -> 2 -> n-1 -> 3 -> n-2
 func ListNodeReorder(head *ListNode) *ListNode {
 	node := head
 	for node != nil && node.Next != nil {
 		node.Next = ListNodeReverse(node.Next)
 		node = node.Next
 	}
+	return head
+}
+
+// leetcode 19: https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+func RemoveNthFromEnd(head *ListNode, n int) *ListNode {
+	fast := head
+	for i := 1; i < n && fast != nil; i++ {
+		fast = fast.Next
+	}
+	if fast == nil {
+		return head
+	}
+
+	if fast.Next == nil {
+		if fast == head {
+			return nil
+		}
+
+		deleted := head
+		head = head.Next
+		deleted.Next = nil
+
+		return head
+	}
+
+	var slow *ListNode
+	for fast.Next != nil {
+		fast = fast.Next
+		if slow == nil {
+			slow = head
+		} else {
+			slow = slow.Next
+		}
+	}
+
+	deleted := slow.Next
+	slow.Next = deleted.Next
+	deleted.Next = nil
 	return head
 }

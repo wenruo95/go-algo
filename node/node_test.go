@@ -293,3 +293,48 @@ func TestListNodeReorder(t *testing.T) {
 	}
 
 }
+
+func TestRemoveNThFromEnd(t *testing.T) {
+	type removeResult struct {
+		a []interface{}
+		n int
+		b []interface{}
+	}
+
+	results := []*removeResult{
+		{
+			a: []interface{}{1, 2, 3, 4, 5},
+			n: 2,
+			b: []interface{}{1, 2, 3, 5},
+		},
+		{
+			a: []interface{}{1},
+			n: 1,
+			b: []interface{}{},
+		},
+		{
+			a: []interface{}{1, 2},
+			n: 1,
+			b: []interface{}{1},
+		},
+		{
+			a: []interface{}{1, 2},
+			n: 2,
+			b: []interface{}{2},
+		},
+		{
+			a: []interface{}{1, 2, 3},
+			n: 3,
+			b: []interface{}{2, 3},
+		},
+	}
+
+	for _, result := range results {
+		removedNode := RemoveNthFromEnd(New(result.a...), result.n)
+		if equal := removedNode.Equal(New(result.b...)); !equal {
+			t.Errorf("remove_n_th_from_end. result:%+v removed:%+v equal:%v",
+				result, removedNode.Dump(), equal)
+		}
+	}
+
+}
