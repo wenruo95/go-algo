@@ -12,7 +12,6 @@ package logic
 
 import (
 	"container/list"
-	"strconv"
 )
 
 // leetcode 20:https://leetcode.com/problems/valid-parentheses/
@@ -237,21 +236,23 @@ func MaxGCD(m, n int) int {
 // leetcode 365: https://leetcode.com/problems/water-and-jug-problem/
 // 本质上是一个加减法问题 需要注意判断无效(死循环-doingMemo、永远添加不到-最大公约数)
 // 优化: getMaxGCD缓存、失败记录缓存
+// 优化2: 去除最大公约数的判断反而更快一些，囧从429ms -> 338ms
 func CanMeasureWater(jug1Capacity int, jug2Capacity int, targetCapacity int) bool {
-
-	gcdmemo := make(map[string]int)
-	getMaxGCD := func(a int, b int) int {
-		if a < b {
-			a, b = b, a
-		}
-		key := strconv.Itoa(a) + "_" + strconv.Itoa(b)
-		if gcd, exist := gcdmemo[key]; exist {
+	/*
+		gcdmemo := make(map[string]int)
+		getMaxGCD := func(a int, b int) int {
+			if a < b {
+				a, b = b, a
+			}
+			key := strconv.Itoa(a) + "_" + strconv.Itoa(b)
+			if gcd, exist := gcdmemo[key]; exist {
+				return gcd
+			}
+			gcd := MaxGCD(a, b)
+			gcdmemo[key] = gcd
 			return gcd
 		}
-		gcd := MaxGCD(a, b)
-		gcdmemo[key] = gcd
-		return gcd
-	}
+	*/
 
 	var measure func(jug1 int, jug2 int, target int) bool
 
@@ -270,15 +271,17 @@ func CanMeasureWater(jug1Capacity int, jug2Capacity int, targetCapacity int) boo
 			return true
 		}
 
-		gcd := getMaxGCD(jug1, jug2)
-		if gcd == 1 && targetCapacity == 1 {
-			succMemo[target] = true
-			return true
-		}
-		if gcd > 1 && target%gcd != 0 { // 这种情况倒来倒去始终为最大公约数的倍数
-			succMemo[target] = false
-			return false
-		}
+		/*
+			gcd := getMaxGCD(jug1, jug2)
+			if gcd == 1 && targetCapacity == 1 {
+				succMemo[target] = true
+				return true
+			}
+			if gcd > 1 && target%gcd != 0 { // 这种情况倒来倒去始终为最大公约数的倍数
+				succMemo[target] = false
+				return false
+			}
+		*/
 
 		left1, left2 := jug1-target, jug2-target
 		if left1 < 0 {
