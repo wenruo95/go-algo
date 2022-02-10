@@ -11,7 +11,10 @@
 package strings
 
 import (
+	"math"
 	"sort"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -191,6 +194,125 @@ func TestStrStr(t *testing.T) {
 	for _, result := range results {
 		if index := StrStr(result.haystack, result.needle); index != result.index {
 			t.Errorf("str_str result:%+v index:%v", result, index)
+		}
+	}
+
+}
+
+func TestReverseWords(t *testing.T) {
+	type reverseResult struct {
+		input  string
+		output string
+	}
+
+	results := []*reverseResult{
+		{
+			input:  "the sky is blue",
+			output: "blue is sky the",
+		},
+		{
+			input:  "  hello world  ",
+			output: "world hello",
+		},
+		{
+			input:  "a good   example",
+			output: "example good a",
+		},
+	}
+
+	for _, result := range results {
+		if output := ReverseWords(result.input); output != result.output {
+			t.Errorf("reverse_words result:%+v output[%v]:%v expect[%v]:%v",
+				result, len(output), output, len(result.output), result.output)
+		}
+	}
+
+}
+
+func TestPermutations(t *testing.T) {
+	type permutationsResult struct {
+	}
+
+}
+
+func TestStr2Int(t *testing.T) {
+	type str2intResult struct {
+		s     string
+		i     int
+		iserr bool
+	}
+
+	results := []*str2intResult{
+		// basic
+		{
+			s:     "100",
+			i:     100,
+			iserr: false,
+		},
+		{
+			s:     "+100",
+			i:     100,
+			iserr: false,
+		},
+		{
+			s:     "-100",
+			i:     -100,
+			iserr: false,
+		},
+		// invalid char
+		{
+			s:     "-hello",
+			i:     0,
+			iserr: true,
+		},
+		{
+			s:     "-520x0",
+			i:     0,
+			iserr: true,
+		},
+		//
+		{
+			s:     strings.Repeat("1", 100),
+			i:     0,
+			iserr: true,
+		},
+		{
+			s:     "-" + strings.Repeat("1", 100),
+			i:     0,
+			iserr: true,
+		},
+		//
+		{
+			s:     strconv.Itoa(math.MaxInt),
+			i:     math.MaxInt,
+			iserr: false,
+		},
+		{
+			s:     strconv.Itoa(math.MinInt),
+			i:     math.MinInt,
+			iserr: false,
+		},
+		{
+			s:     "-" + strconv.Itoa(math.MaxInt),
+			i:     -9223372036854775807,
+			iserr: false,
+		},
+		{
+			s:     strconv.Itoa(math.MinInt)[1:],
+			i:     0,
+			iserr: true,
+		},
+	}
+	//t.Logf("min:%v max:%v", math.MinInt, math.MaxInt)
+
+	for _, result := range results {
+		i, err := Str2Int(result.s)
+		if err != nil && !result.iserr {
+			t.Errorf("str2int error match failed. result:%+v error:%v", result, err)
+			continue
+		}
+		if i != result.i {
+			t.Errorf("str2int reuslt not matched. result:%+v i:%v ", result, i)
 		}
 	}
 

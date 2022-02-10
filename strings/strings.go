@@ -11,6 +11,8 @@
 package strings
 
 import (
+	"fmt"
+	"math"
 	"strconv"
 )
 
@@ -157,4 +159,118 @@ func StrStr(haystack string, needle string) int {
 		}
 	}
 	return -1
+}
+
+// leetcode 151: https://leetcode.com/problems/reverse-words-in-a-string/
+func ReverseWords(s string) string {
+	edges := make([]int, 0)
+
+	var lastIndex int = -1
+	for i := 0; i < len(s); i++ {
+		if s[i] == ' ' {
+			lastIndex = i
+			continue
+		}
+
+		if i+1 >= len(s) || s[i+1] == ' ' {
+			edges = append(edges, lastIndex+1, i+1)
+		}
+	}
+
+	var result string
+	for i := len(edges) - 1; i > 0; i = i - 2 {
+		left, right := edges[i-1], edges[i]
+		if len(result) == 0 {
+			result = s[left:right]
+			continue
+		}
+		result = result + " " + s[left:right]
+	}
+	return result
+}
+
+// 字符的全排列问题: 如 "12" 排列有"1" "2" "12"
+// TODO
+func Permutations(s string) []string {
+	chcnt := make(map[string]int)
+	for _, ch := range s {
+		chcnt[string(ch)] = chcnt[string(ch)] + 1
+	}
+
+	var choose func(map[string]int, int) []string
+	choose = func(chcnt map[string]int, cnt int) []string {
+		if cnt == 1 {
+			list := make([]string, 0)
+			for ch, cnt := range chcnt {
+				if cnt > 0 {
+					list = append(list, ch)
+				}
+			}
+			return list
+		}
+
+		l1 := make([]string, 0)
+		for ch, cnt := range chcnt {
+			if cnt <= 0 {
+				continue
+			}
+
+			chcnt[ch] = cnt - 1
+			l2 := choose(chcnt, cnt-1)
+			chcnt[ch] = cnt + 1
+
+			for _, item := range l2 {
+				l1 = append(l1, ch+item)
+			}
+		}
+		return l1
+	}
+
+	l := make([]string, 0)
+	for i := 1; i <= len(s); i++ {
+		l = append(l, choose(chcnt, i)...)
+	}
+	return l
+}
+
+// string2int
+func Str2Int(s string) (int, error) {
+	if len(s) == 0 {
+		return 0, nil
+	}
+
+	var result int
+	var positive bool = true
+	for index, item := range s {
+		if item == '+' || item == '-' {
+			if index != 0 {
+				return 0, fmt.Errorf("invalid s[%d]:%s", index, string(item))
+			}
+			positive = (item != '-')
+			continue
+		}
+
+		digit := int(item - '0')
+		if digit < 0 || digit > 9 {
+			return 0, fmt.Errorf("invalid s[%d]:%s", index, string(item))
+		}
+
+		if positive {
+			if result > math.MaxInt/10 || result*10 > math.MaxInt-digit {
+				return 0, fmt.Errorf("s:%v more than:%v", s, math.MaxInt)
+			}
+		} else {
+			if -result < math.MinInt/10 || -result*10 < math.MinInt+digit {
+				return 0, fmt.Errorf("s:%v min than:%v", s, math.MinInt)
+			}
+		}
+
+		result = result*10 + int(digit)
+	}
+
+	if positive {
+		return result, nil
+	}
+
+	return -result, nil
 }
