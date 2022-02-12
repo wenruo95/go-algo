@@ -243,7 +243,7 @@ func Str2Int(s string) (int, error) {
 	var positive bool = true
 	for index, item := range s {
 		if item == '+' || item == '-' {
-			if index != 0 {
+			if index != 0 || len(s) == 1 {
 				return 0, fmt.Errorf("invalid s[%d]:%s", index, string(item))
 			}
 			positive = (item != '-')
