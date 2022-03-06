@@ -11,9 +11,28 @@
 package logic
 
 import (
+	"math/rand"
 	"sort"
+	"strings"
 	"testing"
+	"time"
 )
+
+func TestRand(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+
+	chs := "abcedfghijklmnopqrstuvwxyz"
+	numbers := "0123456789"
+	uniqs := "=!@#$"
+	collects := chs + strings.ToUpper(chs) + numbers + uniqs
+
+	var s string
+	for i := 0; i < 12; i++ {
+		s = s + string(collects[rand.Int()%len(collects)])
+	}
+	t.Logf("rand:%v", s)
+
+}
 
 func TestIsValidParentheses(t *testing.T) {
 	type parenthesesResult struct {
@@ -236,4 +255,125 @@ func TestCanMeasureWater(t *testing.T) {
 		}
 	}
 
+}
+
+// TODO
+func TestKthOfTwoSortedArray(t *testing.T) {
+
+	type testData struct {
+		nums1 []int
+		nums2 []int
+		k     int
+	}
+
+	datas := []*testData{
+		{
+			nums1: []int{1, 2, 5, 8, 10},
+			nums2: []int{3, 6, 7, 9, 10},
+			k:     5,
+		},
+		{
+			nums1: []int{1, 2, 5, 5, 8, 10},
+			nums2: []int{3, 6, 7, 9, 10},
+			k:     5,
+		},
+		{
+			nums1: []int{1, 2, 5, 5, 8, 10},
+			nums2: []int{3, 6, 7, 9, 10},
+			k:     11,
+		},
+		{
+			nums1: []int{1, 2},
+			nums2: []int{2},
+			k:     1,
+		},
+	}
+	if len(datas) < 100 {
+		return
+	}
+
+	for _, data := range datas {
+		arr := make([]int, 0)
+		arr = append(arr, data.nums1...)
+		arr = append(arr, data.nums2...)
+		sort.Ints(arr)
+		if data.k < 0 || data.k > len(arr) {
+			t.Errorf("invalid k:%v len:%v", data.k, len(arr))
+		}
+
+		result1 := FindKthOfTwoSortedArray(data.nums1, data.nums2, data.k)
+		result2 := FindKthOfTwoSortedArray(data.nums2, data.nums1, data.k)
+
+		if result1 != result2 || result1 != arr[data.k-1] {
+			t.Errorf("data:%+v result1:%v result2:%v expect:%v", data, result1, result2, arr[data.k-1])
+
+		}
+
+	}
+
+}
+
+func TestMaxSplitN(t *testing.T) {
+
+	type testData struct {
+		n   int
+		max int
+	}
+
+	datas := []*testData{
+		{
+			n:   0,
+			max: 0,
+		},
+		{
+			n:   10,
+			max: 36,
+		},
+		{
+			n:   20,
+			max: 1458,
+		},
+	}
+
+	for _, data := range datas {
+		if max := GetMaxSplitN(data.n); max != data.max {
+			t.Errorf("get_max_split_n data:%+v max:%v", data, max)
+		}
+	}
+
+}
+
+func TestMaxSplitStringN(t *testing.T) {
+
+	type testData struct {
+		s      string
+		output []string
+	}
+
+	datas := []*testData{
+		{
+			s:      "ababc",
+			output: []string{"abab", "c"},
+		},
+	}
+
+	for _, data := range datas {
+		output := MaxSplitStringN(data.s)
+		if !listEquals(output, data.output) {
+			t.Errorf("max_split_string_n data:%+v output:%v", data, output)
+		}
+	}
+
+}
+
+func listEquals(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := 0; i < len(a); i++ {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }

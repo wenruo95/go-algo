@@ -274,3 +274,29 @@ func Str2Int(s string) (int, error) {
 
 	return -result, nil
 }
+
+// We Are Happy
+// We%20Are%20Happy
+func ReplaceSpace(s string) string {
+	/*
+		buff := make([]byte, 0)
+		for i := 0; i < len(s); i++ {
+			if s[i] == ' ' {
+				buff = append(buff, []byte("%20")...)
+			} else {
+				buff = append(buff, s[i])
+			}
+		}
+		return string(buff)
+	*/
+
+	var result string
+	for i := 0; i < len(s); i++ {
+		if s[i] == ' ' {
+			result = result + "%20"
+		} else {
+			result = result + string(s[i])
+		}
+	}
+	return result
+}

@@ -317,3 +317,28 @@ func TestStr2Int(t *testing.T) {
 	}
 
 }
+
+func TestReplaceSpace(t *testing.T) {
+	type testData struct {
+		s      string
+		result string
+	}
+
+	datas := []*testData{
+		{
+			s:      "We Are Happy",
+			result: "We%20Are%20Happy",
+		},
+		{
+			s:      " ",
+			result: "%20",
+		},
+	}
+
+	for _, data := range datas {
+		if result := ReplaceSpace(data.s); result != data.result {
+			t.Errorf("replace_space data:%+v result:%v", data, result)
+		}
+	}
+
+}

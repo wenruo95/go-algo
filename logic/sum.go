@@ -10,7 +10,11 @@
 
 package logic
 
-import "sort"
+import (
+	"sort"
+	"strconv"
+	"strings"
+)
 
 // leetcode 16: https://leetcode.com/problems/3sum-closest/
 func ThreeSumClosest(nums []int, target int) int {
@@ -57,4 +61,141 @@ func twoSumClosest(nums []int, start int, target int) (int, int) {
 		}
 	}
 	return i1, i2
+}
+
+func FourSum(nums []int, target int) [][]int {
+
+	cnts := make(map[int]int)
+	for _, num := range nums {
+		cnts[num] = cnts[num] + 1
+	}
+
+	var fn func(target int, count int) [][]int
+
+	fn = func(target int, count int) [][]int {
+
+		if count == 2 {
+			numSet := make(map[int]struct{})
+			for num := range cnts {
+				if cnts[num] > 0 && cnts[target-num] > 0 && (num != target-num || cnts[num] > 1) {
+					if _, exist := numSet[target-num]; exist {
+						continue
+					}
+					numSet[num] = struct{}{}
+				}
+			}
+
+			result := make([][]int, 0)
+			for num := range numSet {
+				result = append(result, []int{num, target - num})
+			}
+			return result
+		}
+
+		result := make([][]int, 0)
+		noRepeatSet := make(map[string]struct{})
+		for num, cnt := range cnts {
+			if cnt == 0 {
+				continue
+			}
+
+			cnts[num] = cnt - 1
+			arrays := fn(target-num, count-1)
+			cnts[num] = cnt
+
+			for _, array := range arrays {
+				array = append(array, num)
+				if count-1 == 2 {
+					result = append(result, array)
+					continue
+				}
+
+				sort.Ints(array)
+
+				var key strings.Builder
+				for index, value := range array {
+					if index == 0 {
+						key.WriteString(strconv.Itoa(value))
+					} else {
+						key.WriteString("_" + strconv.Itoa(value))
+					}
+				}
+				if _, exist := noRepeatSet[key.String()]; exist {
+					continue
+				}
+				noRepeatSet[key.String()] = struct{}{}
+
+				result = append(result, array)
+			}
+		}
+
+		return result
+	}
+
+	return fn(target, 4)
+}
+
+// leetcode 18: https://leetcode.com/problems/4sum/
+func FourSum2(nums []int, target int) [][]int {
+	sort.Ints(nums)
+
+	var fn func(n int, start int, target int) [][]int
+
+	fn = func(n int, start int, target int) [][]int {
+
+		records := make([][]int, 0)
+
+		if n < 2 {
+			return records
+		}
+
+		if n > 2 {
+			for i := start; i < len(nums); i++ {
+				lists := fn(n-1, i+1, target-nums[i])
+				for j := 0; j < len(lists); j++ {
+					lists[j] = append([]int{nums[i]}, lists[j]...)
+				}
+				records = append(records, lists...)
+
+				for i+1 < len(nums) && nums[i] == nums[i+1] {
+					i = i + 1
+				}
+
+			}
+			return records
+		}
+
+		low, high := start, len(nums)-1
+		for low < high {
+
+			num := nums[low] + nums[high]
+			left, right := nums[low], nums[high]
+
+			if num < target {
+				for low < high && nums[low] == left {
+					low = low + 1
+				}
+
+			} else if num > target {
+				for low < high && nums[high] == right {
+					high = high - 1
+				}
+
+			} else {
+				records = append(records, []int{left, right})
+
+				for low < high && nums[low] == left {
+					low = low + 1
+				}
+				for low < high && nums[high] == right {
+					high = high - 1
+				}
+			}
+
+		}
+
+		return records
+	}
+
+	return fn(4, 0, target)
 }

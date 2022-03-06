@@ -12,6 +12,7 @@ package logic
 
 import (
 	"container/list"
+	"fmt"
 )
 
 // leetcode 20:https://leetcode.com/problems/valid-parentheses/
@@ -310,4 +311,140 @@ func CanMeasureWater(jug1Capacity int, jug2Capacity int, targetCapacity int) boo
 	}
 
 	return measure(jug1Capacity, jug2Capacity, targetCapacity)
+}
+
+// TODO
+func FindKthOfTwoSortedArray(nums1 []int, nums2 []int, k int) int {
+	if k <= 0 || k > len(nums1)+len(nums2) {
+		return -1
+	}
+
+	l1, r1 := 0, len(nums1)-1
+	l2, r2 := 0, len(nums2)-1
+
+	var actK int = k
+	for {
+		fmt.Printf("nums1(%v-%v):%v nums2(%v-%v):%v k:%v\n",
+			l1, r1, nums1, l2, r2, nums2, actK)
+
+		if r1-l1 == -1 {
+			return nums2[l2+actK-1]
+		}
+		if r2-l2 == -1 {
+			return nums1[l1+actK-1]
+		}
+		if actK == 1 {
+			return intMin(nums1[l1], nums2[l2])
+		}
+
+		if k <= 0 {
+			break
+		}
+
+		var mid1, mid2 int
+		if actK/2 > r1-l1+1 {
+			mid1 = r1
+		} else {
+			mid1 = l1 + k/2 - 1
+		}
+		if actK/2 > r2-l2+1 {
+			mid2 = r2
+		} else {
+			mid2 = l2 + k/2 - 1
+		}
+		fmt.Printf("nums1(%v-%v-%v):%v nums2(%v-%v-%v):%v k:%v\n",
+			l1, mid1, r1, nums1, l2, mid2, r2, nums2, actK)
+
+		if nums1[mid1] > nums2[mid2] {
+			actK = actK - (mid2 - l2 + 1)
+			l2 = mid2 + 1
+		} else {
+			actK = actK - (mid1 - l1 + 1)
+			l1 = mid1 + 1
+		}
+	}
+
+	return -1
+}
+
+func intMin(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}
+
+// 10=3 + 3 + 4 => ( 3 * 3 * 4 ) = 36
+func GetMaxSplitN(n int) int {
+
+	var fn func(n int) int
+
+	memo := make(map[int]int)
+	fn = func(n int) int {
+		if n <= 0 {
+			return 0
+		}
+		if n == 1 || n == 2 {
+			return n
+		}
+		if maxSplit, exist := memo[n]; exist {
+			return maxSplit
+		}
+
+		var max int = n
+		for i := 1; i < n; i++ {
+			if maxSplit := fn(i) * fn(n-i); maxSplit > max {
+				max = maxSplit
+			}
+		}
+		memo[n] = max
+		return max
+
+	}
+
+	return fn(n)
+}
+
+// ababc => abab c
+func MaxSplitStringN(s string) []string {
+	if len(s) == 0 {
+		return nil
+	}
+
+	chIndexList := make(map[byte][]int) // first-end
+	for i := 0; i < len(s); i++ {
+		chIndexList[s[i]] = append(chIndexList[s[i]], i)
+	}
+
+	splitStrs := make([]string, 0)
+
+	var index, left, last int = 0, 0, -1
+	for index = 0; index < len(s); index++ {
+		if index == last {
+			splitStrs = append(splitStrs, s[left:last+1])
+
+			left = last + 1
+			continue
+		}
+
+		if lastIndexs, exist := chIndexList[s[index]]; exist && len(lastIndexs) > 1 {
+			lastIndex := lastIndexs[len(lastIndexs)-1]
+			if lastIndex > last {
+				last = lastIndex
+			}
+			continue
+		}
+
+		if index > last {
+			if last == 0 || last < left {
+				last = left
+			}
+			splitStrs = append(splitStrs, s[left:last+1])
+
+			left = last + 1
+		}
+
+	}
+
+	return splitStrs
 }
