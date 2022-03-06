@@ -56,6 +56,9 @@ func (n *ListNode) Equal(src *ListNode) bool {
 	return (dst == nil) && (src == nil)
 }
 
+// 链表反转
+// a -> b -> c -> d
+// a -> ( b -> c -> d )
 func ListNodeReverse(head *ListNode) *ListNode {
 	if head == nil || head.Next == nil {
 		return head
@@ -69,6 +72,10 @@ func ListNodeReverse(head *ListNode) *ListNode {
 
 var suffix *ListNode
 
+// 反转前N个节点
+// a -> b -> c -> d -> e
+// a -> (b -> c -> d) -> e
+// (b -> c -> d) -> a -> suffix
 func ListNodeReverseN(head *ListNode, n int) *ListNode {
 	if head == nil || head.Next == nil {
 		suffix = nil
@@ -84,6 +91,7 @@ func ListNodeReverseN(head *ListNode, n int) *ListNode {
 	return last
 }
 
+// 反转[left,right]中节点
 func ListNodeReverseBetween(head *ListNode, left int, right int) *ListNode {
 	if left == 1 {
 		return ListNodeReverseN(head, right)
@@ -101,6 +109,32 @@ func ListNodeReorder(head *ListNode) *ListNode {
 		node = node.Next
 	}
 	return head
+}
+
+// 优化版本
+func ListNodeReorder2(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+
+	list := make([]*ListNode, 0)
+	for node := head; node != nil; node = node.Next {
+		list = append(list, node)
+	}
+
+	low, high := 0, len(list)-1
+	for low < high {
+		list[low].Next = list[high]
+		low = low + 1
+		if low == high {
+			break
+		}
+
+		list[high].Next = list[low]
+		high = high - 1
+	}
+	list[low].Next = nil
+	return list[0]
 }
 
 // leetcode 19: https://leetcode.com/problems/remove-nth-node-from-end-of-list/
@@ -197,4 +231,25 @@ func MergeKLists(lists []*ListNode) *ListNode {
 		node = MergeTwoLists(node, lists[i])
 	}
 	return node
+}
+
+// leetcode 24: https://leetcode.com/problems/swap-nodes-in-pairs/
+func SwapPairs(head *ListNode) *ListNode {
+	var prev *ListNode
+	var next *ListNode = head
+	for next != nil && next.Next != nil {
+		first, second := next, next.Next
+		first.Next = second.Next
+		second.Next = first
+
+		if prev == nil {
+			head = second
+		} else {
+			prev.Next = second
+		}
+		prev = first
+		next = prev.Next
+	}
+
+	return head
 }

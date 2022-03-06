@@ -252,6 +252,15 @@ func TestReverseBetween(t *testing.T) {
 }
 
 func TestListNodeReorder(t *testing.T) {
+	testReorderByFunc(t, ListNodeReorder)
+}
+
+func TestListNodeReorder2(t *testing.T) {
+	testReorderByFunc(t, ListNodeReorder2)
+}
+
+func testReorderByFunc(t *testing.T, fn func(head *ListNode) *ListNode) {
+
 	type reorderResult struct {
 		a []interface{}
 		b []interface{}
@@ -285,7 +294,7 @@ func TestListNodeReorder(t *testing.T) {
 	}
 
 	for _, result := range results {
-		reorder := ListNodeReorder(New(result.a...))
+		reorder := fn(New(result.a...))
 		if equal := reorder.Equal(New(result.b...)); !equal {
 			t.Errorf("node not equal. a:%+v b:%+v reorder:%+v equal:%v",
 				result.a, result.b, reorder, equal)
@@ -404,4 +413,43 @@ func TestMergeKLists(t *testing.T) {
 		}
 
 	}
+}
+
+func TestSwapPairs(t *testing.T) {
+	type testData struct {
+		a []interface{}
+		b []interface{}
+	}
+
+	datas := []*testData{
+		{
+			a: []interface{}{},
+			b: []interface{}{},
+		},
+		{
+			a: []interface{}{1},
+			b: []interface{}{1},
+		},
+		{
+			a: []interface{}{1, 2, 3, 4},
+			b: []interface{}{2, 1, 4, 3},
+		},
+		{
+			a: []interface{}{1, 2, 3, 4, 5, 6},
+			b: []interface{}{2, 1, 4, 3, 6, 5},
+		},
+		{
+			a: []interface{}{1, 2, 3, 4, 5, 6, 7},
+			b: []interface{}{2, 1, 4, 3, 6, 5, 7},
+		},
+	}
+
+	for _, data := range datas {
+		head := New(data.a...)
+		head2 := SwapPairs(head)
+		if !listEqual(head2.Dump(), data.b) {
+			t.Errorf("swap_pairs data:%+v list:%v", data, head2.Dump())
+		}
+	}
+
 }
