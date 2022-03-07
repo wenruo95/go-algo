@@ -36,3 +36,39 @@ func quickSort(nums []int, left int, right int) {
 	quickSort(nums, left, pivot-1)
 	quickSort(nums, pivot+1, right)
 }
+
+func FindKth(a []int, k int) int {
+	return findKth(a, len(a)-k, 0, len(a)-1)
+}
+
+func findKth(nums []int, k int, low int, high int) int {
+	parti := nums[low]
+
+	left, right := low, high
+	for left < right {
+		for left < right && nums[right] >= parti {
+			right = right - 1
+		}
+		if left == right {
+			break
+		}
+
+		nums[left] = nums[right]
+		left = left + 1
+
+		for left < right && nums[left] <= parti {
+			left = left + 1
+		}
+		nums[right] = nums[left]
+		right = right - 1
+	}
+	nums[left] = parti
+
+	if left < k {
+		return findKth(nums, k, left+1, high)
+	} else if left > k {
+		return findKth(nums, k, low, left-1)
+	}
+
+	return nums[k]
+}

@@ -453,3 +453,44 @@ func TestSwapPairs(t *testing.T) {
 	}
 
 }
+
+func testReverseGroup(t *testing.T, fn func(head *ListNode, k int) *ListNode) {
+
+	type testData struct {
+		a []interface{}
+		k int
+		b []interface{}
+	}
+
+	datas := []*testData{
+		{
+			a: []interface{}{1, 2, 3, 4, 5},
+			k: 2,
+			b: []interface{}{2, 1, 4, 3, 5},
+		},
+		{
+			a: []interface{}{1, 2, 3, 4, 5},
+			k: 3,
+			b: []interface{}{3, 2, 1, 4, 5},
+		},
+	}
+
+	for _, data := range datas {
+		if result := fn(New(data.a...), data.k); !listEqual(result.Dump(), data.b) {
+			t.Errorf("reverse_group error. data:%+v result:%v", data, result.Dump())
+		}
+	}
+
+}
+
+func TestReverseKGroup(t *testing.T) {
+	testReverseGroup(t, ReverseKGroup)
+}
+
+func TestReverseKGroup2(t *testing.T) {
+	testReverseGroup(t, ReverseKGroup2)
+}
+
+func TestReverseKGroup3(t *testing.T) {
+	testReverseGroup(t, ReverseKGroup3)
+}

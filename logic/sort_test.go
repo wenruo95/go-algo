@@ -73,3 +73,35 @@ func TestQuickSort(t *testing.T) {
 	}
 
 }
+
+func TestFindKth(t *testing.T) {
+	type testData struct {
+		nums   []int
+		k      int
+		result int
+	}
+
+	datas := []*testData{
+		{
+			nums:   []int{10, 10, 9, 9, 8, 7, 5, 6, 4, 3, 4, 2},
+			k:      3,
+			result: 9,
+		},
+		{
+			nums:   []int{10, 10, 9, 9, 8, 7, 5, 6, 4, 3, 4, 2},
+			k:      10,
+			result: 4,
+		},
+		{
+			nums:   []int{10, 10, 9, 9, 8, 7, 5, 6, 4, 3, 4, 2},
+			k:      12,
+			result: 2,
+		},
+	}
+
+	for _, data := range datas {
+		if result := FindKth(data.nums, data.k); result != data.result {
+			t.Errorf("find_k_th data:%+v result:%v", data, result)
+		}
+	}
+}

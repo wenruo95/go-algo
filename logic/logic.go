@@ -448,3 +448,15 @@ func MaxSplitStringN(s string) []string {
 
 	return splitStrs
 }
+
+// leetcode 27: https://leetcode.com/problems/remove-element/
+func RemoveElement(nums []int, val int) int {
+	var count int
+	for i := 0; i < len(nums); i++ {
+		if nums[i] != val {
+			nums[count] = nums[i]
+			count = count + 1
+		}
+	}
+	return count
+}

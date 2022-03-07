@@ -377,3 +377,31 @@ func listEquals(a, b []string) bool {
 	}
 	return true
 }
+
+func TestRemoveElement(t *testing.T) {
+	type testData struct {
+		nums  []int
+		val   int
+		count int
+	}
+
+	datas := []*testData{
+		{
+			nums:  []int{3, 2, 2, 3},
+			val:   3,
+			count: 2,
+		},
+		{
+			nums:  []int{0, 1, 2, 2, 3, 0, 4, 2},
+			val:   2,
+			count: 5,
+		},
+	}
+
+	for _, data := range datas {
+		if count := RemoveElement(data.nums, data.val); count != data.count {
+			t.Errorf("remove_element data:%+v count:%v", data, count)
+		}
+	}
+
+}

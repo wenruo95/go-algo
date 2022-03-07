@@ -253,3 +253,102 @@ func SwapPairs(head *ListNode) *ListNode {
 
 	return head
 }
+
+// leetcode 25: https://leetcode.com/problems/reverse-nodes-in-k-group/
+func ReverseKGroup(head *ListNode, k int) *ListNode {
+	if k <= 1 || head == nil || head.Next == nil {
+		return head
+	}
+
+	list := make([]*ListNode, 0)
+	var node *ListNode = head
+	for node != nil {
+		list = append(list, node)
+		node = node.Next
+	}
+
+	cnt := len(list) / k
+	for i := 0; i < cnt; i++ {
+		low, high := i*k, (i+1)*k-1
+		for j := 0; j < k/2; j++ {
+			list[low+j], list[high-j] = list[high-j], list[low+j]
+		}
+	}
+
+	head = list[0]
+	for i := 0; i < cnt*k && i+1 < len(list); i++ {
+		list[i].Next = list[i+1]
+	}
+
+	return head
+}
+
+func ReverseKGroup2(head *ListNode, k int) *ListNode {
+	if k <= 1 || head == nil || head.Next == nil {
+		return head
+	}
+
+	var last *ListNode
+	var node *ListNode = head
+	for {
+		list := make([]*ListNode, 0)
+		for i := 0; i < k && node != nil; i++ {
+			list = append(list, node)
+			node = node.Next
+		}
+		if len(list) < k {
+			break
+		}
+
+		low, high := 0, k-1
+		for i := 0; i < k/2; i++ {
+			list[low+i], list[high-i] = list[high-i], list[low+i]
+		}
+		for i := 0; i < high; i++ {
+			list[i].Next = list[i+1]
+		}
+		list[high].Next = node
+
+		if last == nil {
+			head = list[low]
+		} else {
+			last.Next = list[low]
+		}
+
+		last = list[high]
+	}
+
+	return head
+}
+
+func ReverseKGroup3(head *ListNode, k int) *ListNode {
+
+	if k <= 1 || head == nil || head.Next == nil {
+		return head
+	}
+
+	var node *ListNode = head
+	for i := 0; i < k; i++ {
+		if node == nil {
+			return head
+		}
+		node = node.Next
+	}
+
+	newHead := reverse(head, node)
+	head.Next = ReverseKGroup3(node, k)
+	return newHead
+}
+
+func reverse(first *ListNode, last *ListNode) *ListNode {
+	var node *ListNode = last
+	for first != last {
+		tmp := first.Next
+
+		first.Next = node
+		node = first
+
+		first = tmp
+	}
+	return node
+}
