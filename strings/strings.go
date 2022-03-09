@@ -300,3 +300,76 @@ func ReplaceSpace(s string) string {
 	}
 	return result
 }
+
+// leetcode 30: https://leetcode.com/problems/substring-with-concatenation-of-all-words/
+func FindSubstring(s string, words []string) []int {
+	// 1. create trie tree
+	type dataNode struct {
+		data  map[byte]*dataNode
+		item  byte
+		word  string
+		count int
+	}
+
+	diffCnt := 0
+	root := &dataNode{data: make(map[byte]*dataNode)}
+	for i := 0; i < len(words); i++ {
+		var node *dataNode = root
+
+		for j := 0; j < len(words[i]); j++ {
+			b := words[i][j]
+
+			n2, exist := node.data[b]
+			if exist {
+				node = n2
+				continue
+			}
+
+			n2 = &dataNode{data: make(map[byte]*dataNode), item: b}
+			node.data[b] = n2
+			node = n2
+		}
+
+		node.word = words[i]
+		node.count = node.count + 1
+		if node.count == 1 {
+			diffCnt = diffCnt + 1
+		}
+	}
+
+	// 2. 从前往后匹配
+	list := make([]int, 0)
+	fullLen := len(words) * len(words[0])
+	for i := 0; i < len(s); i++ {
+		var node *dataNode = root
+
+		matchCnt := 0
+		set := make(map[string]int)
+		for j := 0; j < fullLen && i+j < len(s); j++ {
+			n2, exist := node.data[s[i+j]]
+			if !exist {
+				break
+			}
+
+			if len(n2.word) > 0 { // 匹配到叶子节点
+				if set[n2.word] >= n2.count { // 有重复匹配问题
+					break
+				}
+				set[n2.word] = set[n2.word] + 1
+				matchCnt = matchCnt + 1
+
+				node = root
+				continue
+			}
+
+			node = n2
+		}
+
+		if len(set) == diffCnt && matchCnt == len(words) {
+			list = append(list, i)
+			continue
+		}
+	}
+
+	return list
+}

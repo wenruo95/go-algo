@@ -494,3 +494,36 @@ func TestReverseKGroup2(t *testing.T) {
 func TestReverseKGroup3(t *testing.T) {
 	testReverseGroup(t, ReverseKGroup3)
 }
+
+func TestHasCycle(t *testing.T) {
+	type testData struct {
+		a   []interface{}
+		pos int
+		has bool
+	}
+
+	datas := []*testData{
+		{
+			a:   []interface{}{3, 2, 0, -4},
+			pos: 1,
+			has: true,
+		},
+		{
+			a:   []interface{}{1, 2},
+			pos: 0,
+			has: true,
+		},
+		{
+			a:   []interface{}{1},
+			pos: -1,
+			has: false,
+		},
+	}
+
+	for _, data := range datas {
+		if has := HasCycle(NewCircle(data.pos, data.a...)); has != data.has {
+			t.Errorf("has_cycle data:%+v has:%v", data, has)
+		}
+	}
+
+}

@@ -342,3 +342,49 @@ func TestReplaceSpace(t *testing.T) {
 	}
 
 }
+
+func TestFindSubstring(t *testing.T) {
+	type testData struct {
+		s      string
+		words  []string
+		indexs []int
+	}
+
+	datas := []*testData{
+		{
+			s:      "barfoothefoobarman",
+			words:  []string{"foo", "bar"},
+			indexs: []int{0, 9},
+		},
+		{
+			s:      "wordgoodgoodgoodbestword",
+			words:  []string{"word", "good", "best", "word"},
+			indexs: []int{},
+		},
+		{
+			s:      "barfoofoobarthefoobarman",
+			words:  []string{"bar", "foo", "the"},
+			indexs: []int{6, 9, 12},
+		},
+		{
+			s:      "wordgoodgoodgoodbestword",
+			words:  []string{"word", "good", "best", "good"},
+			indexs: []int{8},
+		},
+	}
+
+	{
+		s := strings.Repeat("a", 5000+10)
+		words := make([]string, 5000)
+		for i := 0; i < 5000; i++ {
+			words[i] = "a"
+		}
+		datas = append(datas, &testData{s: s, words: words, indexs: []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}})
+	}
+
+	for _, data := range datas {
+		if indexs := FindSubstring(data.s, data.words); !intListEqual(indexs, data.indexs) {
+			t.Errorf("find_sub_string error. data:%+v indexs:%v", data, indexs)
+		}
+	}
+}

@@ -33,6 +33,24 @@ func New(a ...interface{}) *ListNode {
 	return head
 }
 
+func NewCircle(pos int, a ...interface{}) *ListNode {
+	if pos < 0 {
+		return New(a...)
+	}
+
+	list := make([]*ListNode, len(a))
+	for i := 0; i < len(a); i++ {
+		list[i] = &ListNode{Val: a[i]}
+
+		if i > 0 {
+			list[i-1].Next = list[i]
+		}
+	}
+
+	list[len(list)-1].Next = list[pos]
+	return list[0]
+}
+
 func (n *ListNode) Dump() []interface{} {
 	values := make([]interface{}, 0)
 
@@ -351,4 +369,25 @@ func reverse(first *ListNode, last *ListNode) *ListNode {
 		first = tmp
 	}
 	return node
+}
+
+func HasCycle(head *ListNode) bool {
+	if head == nil || head.Next == nil {
+		return false
+	}
+
+	slow, fast := head, head.Next
+	for slow != nil && fast != nil {
+		if slow == fast {
+			return true
+		}
+		if fast.Next == nil {
+			return false
+		}
+
+		slow = slow.Next
+		fast = fast.Next.Next
+	}
+
+	return false
 }

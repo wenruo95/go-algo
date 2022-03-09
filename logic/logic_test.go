@@ -405,3 +405,78 @@ func TestRemoveElement(t *testing.T) {
 	}
 
 }
+
+func TestCountBits(t *testing.T) {
+	type testData struct {
+		n    int
+		list []int
+	}
+
+	datas := []*testData{
+		{
+			n:    2,
+			list: []int{0, 1, 1},
+		},
+		{
+			n:    5,
+			list: []int{0, 1, 1, 2, 1, 2},
+		},
+	}
+
+	for _, data := range datas {
+		if list := CountBits(data.n); !intListEqual(list, data.list) {
+			t.Errorf("count bits error. data:%+v list:%v", data, list)
+		}
+	}
+
+}
+
+func TestFindMaxSeq(t *testing.T) {
+	type testData struct {
+		c      int
+		sizes  []int
+		result []int
+	}
+
+	datas := []*testData{
+		{
+			c:      1,
+			sizes:  []int{1, 2, 3, 5, 4},
+			result: []int{0, 0},
+		},
+		{
+			c:      7,
+			sizes:  []int{1, 2, 3, 5, 4},
+			result: []int{0, 2},
+		},
+		{
+			c:      7,
+			sizes:  []int{1, 2, 3, 5, 4, 7},
+			result: []int{5, 5},
+		},
+		{
+			c:      21,
+			sizes:  []int{1, 2, 3, 5, 4, 7},
+			result: []int{1, 5},
+		},
+		{
+			c:      22,
+			sizes:  []int{1, 2, 3, 5, 4, 7},
+			result: []int{0, 5},
+		},
+		{
+			c:      23,
+			sizes:  []int{1, 2, 3, 5, 4, 7},
+			result: []int{0, 5},
+		},
+	}
+
+	for _, data := range datas {
+		result := FindMaxSeq(data.c, data.sizes)
+		if len(result) != 2 ||
+			result[0] != data.result[0] || result[1] != data.result[1] {
+			t.Errorf("find_max_seq error. data:%+v result:%v", data, result)
+		}
+
+	}
+}

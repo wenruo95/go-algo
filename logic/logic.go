@@ -460,3 +460,55 @@ func RemoveElement(nums []int, val int) int {
 	}
 	return count
 }
+
+// leetcode 338: https://leetcode.com/problems/counting-bits/submissions/
+func CountBits(n int) []int {
+	if n < 0 {
+		return nil
+	}
+
+	// n * log(n)
+	list := make([]int, n+1)
+	for i := 0; i <= n; i++ {
+		sum, num := 0, i
+		for num != 0 {
+			sum = sum + num%2
+			num = num / 2
+		}
+		list[i] = sum
+	}
+
+	return list
+}
+
+/*
+题目描述
+有N个文件，每个文件的编号从0至N-1，相应大小分别记为S(i)。给定磁盘空间为C，
+试实现一个函数从N个文件中选出若干个连续的文件拷贝到磁盘中，使得磁盘剩余空间最小。
+示例：C, S(i) 分别为7，[1, 2, 3, 5, 4]，可求得「起始编号」、「结束编号」为 0, 2。
+*/
+func FindMaxSeq(c int, sizes []int) []int {
+	var left, right, maxNum int
+
+	for i := 0; i < len(sizes); i++ {
+		var sum int
+		for j := 0; i+j < len(sizes); j++ {
+			if j == 0 {
+				sum = sizes[i]
+			} else {
+				sum = sum + sizes[i+j]
+			}
+
+			if sum > c {
+				break
+			}
+
+			if sum > maxNum {
+				maxNum = sum
+				left, right = i, i+j
+			}
+		}
+	}
+
+	return []int{left, right}
+}
