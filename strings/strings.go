@@ -373,3 +373,138 @@ func FindSubstring(s string, words []string) []int {
 
 	return list
 }
+
+func FindSubstring2(s string, words []string) []int {
+	if len(words) == 0 || len(words)*len(words[0]) > len(s) {
+		return nil
+	}
+
+	wordCnt := make(map[string]int)
+	for _, word := range words {
+		wordCnt[word] = wordCnt[word] + 1
+	}
+
+	size := len(words[0])
+	fullLen := len(words) * size
+
+	list := make([]int, 0)
+	for i := 0; i < len(s)-fullLen+1; i++ {
+
+		sum := 0
+		matchCnt := make(map[string]int)
+		for j := 0; i+j+size <= len(s); j = j + size {
+			word := s[i+j : i+j+size]
+			if _, exist := wordCnt[word]; !exist {
+				break
+			}
+			if matchCnt[word] == wordCnt[word] {
+				break
+			}
+
+			matchCnt[word] = matchCnt[word] + 1
+			sum = sum + 1
+		}
+
+		if sum == len(words) && len(matchCnt) == len(wordCnt) {
+			list = append(list, i)
+		}
+
+	}
+
+	return list
+}
+
+// assume no error
+func StrCalculate(str string) float64 {
+
+	arr := make([]string, 0)
+	firstOps := make([]int, 0)
+
+	var start int = 0
+	for i := 0; i < len(str); i++ {
+		if str[i] == byte('+') || str[i] == byte('-') || str[i] == byte('*') || str[i] == byte('/') {
+			arr = append(arr, str[start:i])
+			arr = append(arr, string(str[i]))
+			start = i + 1
+
+			if str[i] == byte('*') || str[i] == byte('/') {
+				firstOps = append(firstOps, len(arr)-1)
+			}
+
+		}
+	}
+	arr = append(arr, str[start:])
+
+	// * /
+	index2val := make(map[int]float64)
+	index2right := make(map[int]int)
+	for _, index := range firstOps {
+		var leftVal float64
+		if val, exist := index2val[index-1]; exist {
+			leftVal = val
+		} else {
+			a, _ := strconv.Atoi(arr[index-1])
+			leftVal = float64(a)
+		}
+
+		b, _ := strconv.Atoi(arr[index+1])
+
+		var result float64
+		if arr[index] == "*" {
+			result = leftVal * float64(b)
+		} else {
+			result = leftVal / float64(b)
+		}
+		index2right[index-1] = index + 1
+		index2val[index+1] = result
+	}
+
+	var sum float64
+	oldPos, leftPos := 0, 0
+	for {
+		if pos, exist := index2right[leftPos]; exist {
+			leftPos = pos
+			continue
+		}
+		break
+	}
+	if leftPos == oldPos {
+		a, _ := strconv.Atoi(arr[oldPos])
+		sum = float64(a)
+	} else {
+		sum = float64(index2val[leftPos])
+	}
+
+	for i := leftPos + 1; i+1 < len(arr); i++ {
+		if arr[i] != "+" && arr[i] != "-" {
+			continue
+		}
+
+		// right
+		rightPos, oldPos := i+1, i+1
+		for {
+			if pos, exist := index2right[rightPos]; exist {
+				rightPos = pos
+				continue
+			}
+			break
+		}
+		var rightVal float64
+		if rightPos == oldPos {
+			b, _ := strconv.Atoi(arr[rightPos])
+			rightVal = float64(b)
+		} else {
+			i = rightPos
+			rightVal = index2val[rightPos]
+		}
+
+		if arr[i] == "+" {
+			sum = sum + rightVal
+		} else {
+			sum = sum - rightVal
+		}
+
+	}
+
+	return sum
+}

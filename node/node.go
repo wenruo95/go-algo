@@ -391,3 +391,119 @@ func HasCycle(head *ListNode) bool {
 
 	return false
 }
+
+// leetcode 2: https://leetcode.com/problems/add-two-numbers/
+func AddTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	var nextNum int
+
+	var head, prev *ListNode
+	for l1 != nil || l2 != nil {
+		var num int = nextNum
+		if l1 != nil {
+			num = num + l1.Val.(int)
+		}
+		if l2 != nil {
+			num = num + l2.Val.(int)
+		}
+		nextNum = num / 10
+
+		node := &ListNode{Val: num % 10}
+		if prev == nil {
+			prev = node
+			head = node
+		} else {
+			prev.Next = node
+			prev = node
+		}
+
+		if l1 != nil {
+			l1 = l1.Next
+		}
+		if l2 != nil {
+			l2 = l2.Next
+		}
+	}
+
+	if nextNum > 0 {
+		node := &ListNode{Val: nextNum}
+		prev.Next = node
+	}
+
+	return head
+}
+
+// leetcode 82: https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
+func DeleteDuplicates(head *ListNode) *ListNode {
+	var prev, rhead, node *ListNode
+	for head != nil {
+		if (prev != nil && prev.Val.(int) == head.Val.(int)) ||
+			(head.Next != nil && head.Next.Val.(int) == head.Val.(int)) {
+
+			prev = head
+			head = head.Next
+			continue
+		}
+		prev = head
+
+		if rhead == nil {
+			rhead = head
+			node = head
+			continue
+		}
+		node.Next = head
+		node = node.Next
+		head = head.Next
+
+	}
+	if node != nil {
+		node.Next = nil
+	}
+
+	return rhead
+}
+
+// leetcode 61: https://leetcode.com/problems/rotate-list/
+func RotateRight(head *ListNode, k int) *ListNode {
+	if k <= 0 || head == nil || head.Next == nil {
+		return head
+	}
+
+	// find n-th
+	var fast *ListNode
+	for i := 1; i <= k; i++ {
+		if i == 1 {
+			fast = head
+			continue
+		}
+
+		fast = fast.Next
+
+		if fast.Next == nil {
+			if k%i == 0 {
+				return head
+			}
+			k = i + k%i
+
+			i = i + 1
+			fast = head
+		}
+
+	}
+
+	var slow *ListNode
+	for fast.Next != nil {
+		if slow == nil {
+			slow = head
+			fast = fast.Next
+			continue
+		}
+
+		slow = slow.Next
+		fast = fast.Next
+	}
+
+	newHead := slow.Next
+	slow.Next = nil
+	fast.Next = head
+	return newHead
+}

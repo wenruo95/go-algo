@@ -527,3 +527,102 @@ func TestHasCycle(t *testing.T) {
 	}
 
 }
+
+func TestAddTwoNumer(t *testing.T) {
+	type testData struct {
+		l1 []interface{}
+		l2 []interface{}
+		l3 []interface{}
+	}
+
+	datas := []*testData{
+		{
+			l1: []interface{}{2, 4, 3},
+			l2: []interface{}{5, 6, 4},
+			l3: []interface{}{7, 0, 8},
+		},
+		{
+			l1: []interface{}{0},
+			l2: []interface{}{0},
+			l3: []interface{}{0},
+		},
+		{
+			l1: []interface{}{9, 9, 9, 9, 9, 9, 9},
+			l2: []interface{}{9, 9, 9, 9},
+			l3: []interface{}{8, 9, 9, 9, 0, 0, 0, 1},
+		},
+	}
+
+	for _, data := range datas {
+		l3 := AddTwoNumbers(New(data.l1...), New(data.l2...))
+		if !listEqual(l3.Dump(), data.l3) {
+			t.Errorf("add_two_numers error. data:%+v l3:%v", data, l3.Dump())
+		}
+	}
+
+}
+
+func TestDeleteDumplicates(t *testing.T) {
+	type testData struct {
+		list   []interface{}
+		result []interface{}
+	}
+	datas := []*testData{
+		{
+			list:   []interface{}{1, 2, 3, 3, 4, 4, 5},
+			result: []interface{}{1, 2, 5},
+		},
+		{
+			list:   []interface{}{1, 1, 1, 2, 3},
+			result: []interface{}{2, 3},
+		},
+		{
+			list:   []interface{}{1, 2, 2},
+			result: []interface{}{1},
+		},
+	}
+
+	for _, data := range datas {
+		if result := DeleteDuplicates(New(data.list...)); !listEqual(result.Dump(), data.result) {
+			t.Errorf("delete_duplicates error. data:%+v result:%v", data, result.Dump())
+		}
+	}
+
+}
+
+func TestRotateRight(t *testing.T) {
+	type testData struct {
+		list   []interface{}
+		k      int
+		result []interface{}
+	}
+
+	datas := []*testData{
+		{
+			list:   []interface{}{1, 2, 3, 4, 5},
+			k:      2,
+			result: []interface{}{4, 5, 1, 2, 3},
+		},
+		{
+			list:   []interface{}{0, 1, 2},
+			k:      4,
+			result: []interface{}{2, 0, 1},
+		},
+		{
+			list:   []interface{}{0, 1, 2},
+			k:      100,
+			result: []interface{}{2, 0, 1},
+		},
+		{
+			list:   []interface{}{0, 1, 2},
+			k:      3,
+			result: []interface{}{0, 1, 2},
+		},
+	}
+
+	for _, data := range datas {
+		if result := RotateRight(New(data.list...), data.k); !listEqual(result.Dump(), data.result) {
+			t.Errorf("rotate_right error. data:%+v result:%v", data, result.Dump())
+		}
+	}
+}

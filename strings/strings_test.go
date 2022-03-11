@@ -343,7 +343,7 @@ func TestReplaceSpace(t *testing.T) {
 
 }
 
-func TestFindSubstring(t *testing.T) {
+func testFindSubString(t *testing.T, fn func(s string, words []string) []int) {
 	type testData struct {
 		s      string
 		words  []string
@@ -383,8 +383,48 @@ func TestFindSubstring(t *testing.T) {
 	}
 
 	for _, data := range datas {
-		if indexs := FindSubstring(data.s, data.words); !intListEqual(indexs, data.indexs) {
+		if indexs := fn(data.s, data.words); !intListEqual(indexs, data.indexs) {
 			t.Errorf("find_sub_string error. data:%+v indexs:%v", data, indexs)
+		}
+	}
+}
+
+func TestFindSubString(t *testing.T) {
+	testFindSubString(t, FindSubstring)
+}
+
+func TestFindSubString2(t *testing.T) {
+	testFindSubString(t, FindSubstring2)
+}
+
+func TestStrCalculate(t *testing.T) {
+	type testData struct {
+		s   string
+		sum float64
+	}
+
+	datas := []*testData{
+		{
+			s:   "1+2+3+4+5+6+7+8",
+			sum: 36,
+		},
+		{
+			s:   "12+14-15*16/3",
+			sum: -54,
+		},
+		{
+			s:   "12+14-15*16/2*19/20+21+22+23",
+			sum: -22,
+		},
+		{
+			s:   "1*2*3*4*5*6",
+			sum: 720,
+		},
+	}
+
+	for _, data := range datas {
+		if sum := StrCalculate(data.s); sum != data.sum {
+			t.Errorf("strcalculate error. data:%+v sum:%v", data, sum)
 		}
 	}
 }
