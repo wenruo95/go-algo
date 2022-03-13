@@ -480,3 +480,45 @@ func TestFindMaxSeq(t *testing.T) {
 
 	}
 }
+
+func TestNextPermutation(t *testing.T) {
+	type testData struct {
+		nums   []int
+		output []int
+	}
+
+	datas := []*testData{
+		{
+			nums:   []int{1, 2, 3},
+			output: []int{1, 3, 2},
+		},
+		{
+			nums:   []int{3, 2, 1},
+			output: []int{1, 2, 3},
+		},
+		{
+			nums:   []int{1, 3, 2},
+			output: []int{2, 1, 3},
+		},
+		{
+			nums:   []int{1, 1, 5},
+			output: []int{1, 5, 1},
+		},
+		{
+			nums:   []int{5, 4, 7, 5, 3, 2},
+			output: []int{5, 5, 2, 3, 4, 7},
+		},
+	}
+
+	for _, data := range datas {
+		nums := make([]int, len(data.nums))
+		for index, num := range data.nums {
+			nums[index] = num
+		}
+
+		NextPermutation(nums)
+		if !intListEqual(nums, data.output) {
+			t.Errorf("next_permutation error. data:%+v nums:%+v", data, nums)
+		}
+	}
+}

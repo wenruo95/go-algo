@@ -512,3 +512,37 @@ func FindMaxSeq(c int, sizes []int) []int {
 
 	return []int{left, right}
 }
+
+// leetcode 31: https://leetcode.com/problems/next-permutation/
+// [1,2,3] => [1,3,2] => [3,1,2] => [2,3,1] => [3,1,2] -> [3,2,1]
+func NextPermutation(nums []int) {
+	var k int
+	for k = len(nums) - 2; k >= 0; k-- {
+		if nums[k] < nums[k+1] {
+			break
+		}
+	}
+
+	if k < 0 {
+		for i := 0; i < len(nums)/2; i++ {
+			nums[i], nums[len(nums)-1-i] = nums[len(nums)-1-i], nums[i]
+		}
+		return
+	}
+
+	var l int
+	for l = len(nums) - 1; l > k; l-- {
+		if nums[k] < nums[l] {
+			break
+		}
+	}
+	nums[k], nums[l] = nums[l], nums[k]
+
+	// [k + 1:]
+	start := k + 1
+	for i := 0; i < (len(nums)-start)/2; i++ {
+		left, right := start+i, len(nums)-1-i
+		nums[left], nums[right] = nums[right], nums[left]
+	}
+
+}
