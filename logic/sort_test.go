@@ -47,18 +47,6 @@ func newSortResults(autoCase bool) []*sortResult {
 	return results
 }
 
-func intListEqual(dst, src []int) bool {
-	if len(dst) != len(src) {
-		return false
-	}
-	for i := 0; i < len(dst); i++ {
-		if dst[i] != src[i] {
-			return false
-		}
-	}
-	return true
-}
-
 func TestQuickSort(t *testing.T) {
 	results := newSortResults(true)
 	for _, result := range results {

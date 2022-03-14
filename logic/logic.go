@@ -546,3 +546,39 @@ func NextPermutation(nums []int) {
 	}
 
 }
+
+// leetcode 32: https://leetcode.com/problems/longest-valid-parentheses/
+func LongestValidParentheses(s string) int {
+	var maxlen int
+	for index := 0; index < len(s); index++ {
+		var left, right int
+		for j := index; s[index] == '(' && j < len(s); j++ {
+			if s[j] == '(' {
+				left = left + 1
+				continue
+			}
+
+			right = right + 1
+			if left == right {
+				maxlen = intmax(maxlen, left+right)
+				continue
+			}
+
+			if left < right {
+				index = j - 1
+				maxlen = intmax(maxlen, left+right-1)
+				break
+			}
+		}
+
+	}
+
+	return maxlen
+}
+
+func intmax(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}

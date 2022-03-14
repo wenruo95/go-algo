@@ -12,23 +12,10 @@ package logic
 
 import (
 	"math"
-	"sort"
 	"strconv"
 	"strings"
 	"testing"
 )
-
-func intListEqual(a, b []int) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := 0; i < len(a); i++ {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
-}
 
 func TestFindAnagrams(t *testing.T) {
 	type anagramsResult struct {
@@ -64,20 +51,6 @@ func TestFindAnagrams(t *testing.T) {
 	}
 }
 
-func stringListEqual(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	sort.Strings(a)
-	sort.Strings(b)
-	for i := 0; i < len(a); i++ {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
-}
-
 func TestLetterCombinations(t *testing.T) {
 
 	type letterResult struct {
@@ -102,7 +75,7 @@ func TestLetterCombinations(t *testing.T) {
 
 	for _, result := range results {
 		combs := LetterCombinations(result.digits)
-		if !stringListEqual(combs, result.output) {
+		if !stringListItemEqual(combs, result.output) {
 			t.Errorf("letter_combineations. digits:%+v output:%+v combs:%+v",
 				result.digits, result.output, combs)
 		}

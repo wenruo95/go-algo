@@ -62,22 +62,6 @@ func TestIsValidParentheses(t *testing.T) {
 
 }
 
-func stringListEquals(dst, src []string) bool {
-	if len(dst) != len(src) {
-		return false
-	}
-
-	sort.Strings(dst)
-	sort.Strings(src)
-	for i := 0; i < len(dst); i++ {
-		if dst[i] != src[i] {
-			return false
-		}
-	}
-
-	return true
-}
-
 func TestGenerateParenthesis(t *testing.T) {
 	type generateParenthesis struct {
 		n      int
@@ -108,7 +92,7 @@ func TestGenerateParenthesis(t *testing.T) {
 
 	for _, result := range results {
 		output := GenerateParenthesis(result.n)
-		if !stringListEquals(output, result.output) {
+		if !stringListItemEqual(output, result.output) {
 			t.Errorf("generate_parenthesis result:%+v output:%+v", result, output)
 		}
 
@@ -359,23 +343,11 @@ func TestMaxSplitStringN(t *testing.T) {
 
 	for _, data := range datas {
 		output := MaxSplitStringN(data.s)
-		if !listEquals(output, data.output) {
+		if !stringListEqual(output, data.output) {
 			t.Errorf("max_split_string_n data:%+v output:%v", data, output)
 		}
 	}
 
-}
-
-func listEquals(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := 0; i < len(a); i++ {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
 }
 
 func TestRemoveElement(t *testing.T) {
@@ -521,4 +493,33 @@ func TestNextPermutation(t *testing.T) {
 			t.Errorf("next_permutation error. data:%+v nums:%+v", data, nums)
 		}
 	}
+}
+
+func TestLongestValidParentheses(t *testing.T) {
+	type testData struct {
+		s   string
+		num int
+	}
+
+	datas := []*testData{
+		{
+			s:   "(()",
+			num: 2,
+		},
+		{
+			s:   ")()())",
+			num: 4,
+		},
+		{
+			s:   "",
+			num: 0,
+		},
+	}
+
+	for _, data := range datas {
+		if num := LongestValidParentheses(data.s); num != data.num {
+			t.Errorf("longest_valid_parentheses error. data:%+v num:%v", data, num)
+		}
+	}
+
 }
