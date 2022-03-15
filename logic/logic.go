@@ -4,7 +4,7 @@
 *   file : logic.go
 *   coder: zemanzeng
 *   date : 2022-02-03 00:49:06
-*   desc :
+*   desc : leetcode logic
 *
 ================================================================*/
 
@@ -581,4 +581,209 @@ func intmax(a, b int) int {
 		return a
 	}
 	return b
+}
+
+// leetcode 34: https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
+func SearchRange(nums []int, target int) []int {
+	var index int = -1
+
+	// 1. find mid
+	low, high := 0, len(nums)-1
+	for low <= high {
+		mid := (low + high) / 2
+		if nums[mid] == target {
+			index = mid
+			break
+		}
+		if nums[mid] < target {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+
+	if index == -1 {
+		return []int{-1, -1}
+	}
+
+	result := make([]int, 0)
+
+	// 2. find left
+	left, right := low, index
+	for left <= right {
+		mid := (left + right) / 2
+		if nums[mid] == target {
+			if mid-1 < low || nums[mid-1] < target {
+				result = append(result, mid)
+				break
+			}
+			right = mid - 1
+			continue
+		}
+
+		if nums[mid] < target {
+			left = mid + 1
+		}
+	}
+	if len(result) < 1 {
+		result = append(result, index)
+	}
+
+	// 3. find right
+	left, right = index, high
+	for left <= right {
+		mid := (left + right) / 2
+		if nums[mid] == target {
+			if mid+1 > high || nums[mid+1] > target {
+				result = append(result, mid)
+				break
+			}
+			left = mid + 1
+			continue
+		}
+
+		if nums[mid] > target {
+			right = mid - 1
+		}
+	}
+	if len(result) < 2 {
+		result = append(result, index)
+	}
+
+	return result
+}
+
+// leetcode 35: https://leetcode.com/problems/search-insert-position/
+func SearchInsert(nums []int, target int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	low, high := 0, len(nums)-1
+
+	var mid int
+	for low <= high {
+		mid = (low + high) / 2
+
+		if nums[mid] >= target {
+			if mid-1 < 0 || nums[mid-1] < target {
+				return mid
+			}
+
+			high = mid - 1
+			continue
+		}
+
+		low = mid + 1
+	}
+
+	return mid + 1
+}
+
+// leetcode 36: https://leetcode.com/problems/valid-sudoku/
+func IsValidSudoku(board [][]byte) bool {
+	if len(board) == 0 {
+		return false
+	}
+
+	columns, rows := len(board), len(board[0])
+	// column
+	for column := 0; column < columns; column++ {
+		set := make(map[byte]struct{})
+		for row := 0; row < rows; row++ {
+			b := board[column][row]
+			if _, exist := set[b]; exist {
+				return false
+			}
+			if b >= '0' && b <= '9' {
+				set[b] = struct{}{}
+			}
+		}
+	}
+
+	// row
+	for row := 0; row < rows; row++ {
+		set := make(map[byte]struct{})
+		for column := 0; column < columns; column++ {
+			b := board[column][row]
+			if _, exist := set[b]; exist {
+				return false
+			}
+			if b >= '0' && b <= '9' {
+				set[b] = struct{}{}
+			}
+		}
+	}
+
+	// 3*3
+	for column := 0; column+2 < columns; column = column + 3 {
+		for row := 0; row+2 < rows; row = row + 3 {
+			set := make(map[byte]struct{})
+
+			for j := 0; j < 3; j++ {
+				for k := 0; k < 3; k++ {
+					b := board[column+j][row+k]
+					if _, exist := set[b]; exist {
+						return false
+					}
+					if b >= '0' && b <= '9' {
+						set[b] = struct{}{}
+					}
+				}
+			}
+
+		}
+	}
+
+	return true
+}
+
+// leetcode 37: https://leetcode.com/problems/sudoku-solver/
+func SolveSudoku(board [][]byte) {
+	if len(board) != 9 || len(board[0]) != 9 {
+		return
+	}
+
+	var solve func(board [][]byte) bool
+
+	solve = func(board [][]byte) bool {
+		for i := 0; i < len(board); i++ {
+			for j := 0; j < len(board[0]); j++ {
+
+				if board[i][j] == '.' {
+					for c := byte('1'); c <= '9'; c++ {
+						if isValidChar(board, i, j, c) {
+							board[i][j] = c
+
+							if solve(board) {
+								return true
+							} else {
+								board[i][j] = '.'
+							}
+
+						}
+					}
+
+					return false
+				}
+
+			}
+		}
+
+		return true
+	}
+
+	solve(board)
+}
+
+func isValidChar(board [][]byte, row int, column int, c byte) bool {
+	for i := 0; i < 9; i++ {
+		if board[row][i] == c || board[i][column] == c {
+			return false
+		}
+		if x, y := (row/3)*3+i/3, (column/3)*3+i%3; board[x][y] == c {
+			return false
+		}
+	}
+	return true
 }

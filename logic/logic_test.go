@@ -523,3 +523,156 @@ func TestLongestValidParentheses(t *testing.T) {
 	}
 
 }
+
+func TestSearchRange(t *testing.T) {
+	type testData struct {
+		nums   []int
+		target int
+		result []int
+	}
+
+	datas := []*testData{
+		{
+			nums:   []int{5, 7, 7, 8, 8, 10},
+			target: 8,
+			result: []int{3, 4},
+		},
+		{
+			nums:   []int{5, 7, 7, 8, 8, 10},
+			target: 6,
+			result: []int{-1, -1},
+		},
+		{
+			nums:   []int{},
+			target: 0,
+			result: []int{-1, -1},
+		},
+	}
+
+	for _, data := range datas {
+		if result := SearchRange(data.nums, data.target); !intListEqual(result, data.result) {
+			t.Errorf("search_range error. data:%+v result:%v", data, result)
+		}
+	}
+
+}
+
+func TestSearchInsert(t *testing.T) {
+	type testData struct {
+		nums   []int
+		target int
+		output int
+	}
+
+	datas := []*testData{
+		{
+			nums:   []int{1, 3, 5, 6},
+			target: 5,
+			output: 2,
+		},
+		{
+			nums:   []int{1, 3, 5, 6},
+			target: 2,
+			output: 1,
+		},
+		{
+			nums:   []int{1, 3, 5, 6},
+			target: 7,
+			output: 4,
+		},
+	}
+
+	for _, data := range datas {
+		if output := SearchInsert(data.nums, data.target); output != data.output {
+			t.Errorf("search_insert error. data:%+v output:%v", data, output)
+		}
+	}
+
+}
+
+func TestIsValidSudoku(t *testing.T) {
+
+	type testData struct {
+		board [][]byte
+		valid bool
+	}
+
+	datas := []*testData{
+		{
+			board: [][]byte{
+				{'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+				{'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+				{'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+				{'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+				{'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+				{'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+				{'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+				{'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+				{'.', '.', '.', '.', '8', '.', '.', '7', '9'},
+			},
+			valid: true,
+		},
+		{
+			board: [][]byte{
+				{'8', '3', '.', '.', '7', '.', '.', '.', '.'},
+				{'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+				{'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+				{'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+				{'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+				{'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+				{'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+				{'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+				{'.', '.', '.', '.', '8', '.', '.', '7', '9'},
+			},
+			valid: false,
+		},
+	}
+
+	for _, data := range datas {
+		if valid := IsValidSudoku(data.board); valid != data.valid {
+			t.Errorf("is_valid_sudoku error. valid:%v expect:%v", valid, data.valid)
+		}
+	}
+}
+
+func TestSolveSudoku(t *testing.T) {
+	type testData struct {
+		board [][]byte
+	}
+
+	datas := []*testData{
+		{
+			board: [][]byte{
+				{'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+				{'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+				{'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+				{'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+				{'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+				{'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+				{'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+				{'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+				{'.', '.', '.', '.', '8', '.', '.', '7', '9'},
+			},
+		},
+	}
+
+	for _, data := range datas {
+		SolveSudoku(data.board)
+		if !IsValidSudoku(data.board) {
+			t.Errorf("solve_sudo_ku error")
+		}
+		t.Logf("board:%+v", board2str(data.board))
+	}
+
+}
+
+func board2str(board [][]byte) string {
+	var s string = "\n"
+	for _, bts := range board {
+		for _, bt := range bts {
+			s = s + string(bt)
+		}
+		s = s + "\n"
+	}
+	return s
+}
