@@ -10,7 +10,11 @@
 
 package logic
 
-import "sort"
+import (
+	"sort"
+	"strconv"
+	"strings"
+)
 
 func stringListEqual(a, b []string) bool {
 	if len(a) != len(b) {
@@ -50,4 +54,47 @@ func stringListItemEqual(dst, src []string) bool {
 	}
 
 	return true
+}
+
+func arraysEqual(a [][]int, b [][]int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+
+	ma := make(map[string]struct{})
+	mb := make(map[string]struct{})
+
+	for _, array := range a {
+		sort.Ints(array)
+
+		var key strings.Builder
+		for index, value := range array {
+			if index == 0 {
+				key.WriteString(strconv.Itoa(value))
+			} else {
+				key.WriteString("_" + strconv.Itoa(value))
+			}
+		}
+		ma[key.String()] = struct{}{}
+	}
+
+	for _, array := range b {
+		sort.Ints(array)
+
+		var key strings.Builder
+		for index, value := range array {
+			if index == 0 {
+				key.WriteString(strconv.Itoa(value))
+			} else {
+				key.WriteString("_" + strconv.Itoa(value))
+			}
+		}
+		mb[key.String()] = struct{}{}
+
+		if _, exist := ma[key.String()]; !exist {
+			return false
+		}
+	}
+
+	return len(ma) == len(mb)
 }

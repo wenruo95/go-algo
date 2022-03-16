@@ -13,6 +13,8 @@ package logic
 import (
 	"container/list"
 	"fmt"
+	"strconv"
+	"strings"
 )
 
 // leetcode 20:https://leetcode.com/problems/valid-parentheses/
@@ -786,4 +788,31 @@ func isValidChar(board [][]byte, row int, column int, c byte) bool {
 		}
 	}
 	return true
+}
+
+// leetcode 38: https://leetcode.com/problems/count-and-say/
+func CountAndSay(n int) string {
+
+	var s string = "1"
+
+	for j := 2; j <= n; j++ {
+		result := &strings.Builder{}
+
+		var count int
+		for i := 0; i < len(s); i++ {
+			count = count + 1
+
+			if i+1 < len(s) && s[i] == s[i+1] {
+				continue
+			}
+
+			result.WriteString(strconv.Itoa(count))
+			result.WriteByte(s[i])
+			count = 0
+		}
+
+		s = result.String()
+	}
+
+	return s
 }

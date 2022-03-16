@@ -199,3 +199,47 @@ func FourSum2(nums []int, target int) [][]int {
 
 	return fn(4, 0, target)
 }
+
+// leetcode 39: https://leetcode.com/problems/combination-sum/
+func CombinationSum(candidates []int, target int) [][]int {
+	if len(candidates) == 0 {
+		return nil
+	}
+
+	sort.Ints(candidates)
+
+	memo := make(map[int][][]int)
+
+	var fn func(target int) [][]int
+	fn = func(target int) [][]int {
+		if target < candidates[0] {
+			return nil
+		}
+		if v, exist := memo[target]; exist {
+			return v
+		}
+
+		arrays := make([][]int, 0)
+		for i := 0; i < len(candidates); i++ {
+			if target == candidates[i] {
+				arrays = append(arrays, []int{candidates[i]})
+				continue
+			}
+
+			lists := fn(target - candidates[i])
+			for _, list := range lists {
+				if len(list) > 0 && candidates[i] > list[0] { // 确保数据有序
+					continue
+				}
+				arrays = append(arrays,
+					append([]int{candidates[i]}, list...),
+				)
+			}
+		}
+
+		memo[target] = arrays
+		return arrays
+	}
+
+	return fn(target)
+}

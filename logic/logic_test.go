@@ -661,7 +661,7 @@ func TestSolveSudoku(t *testing.T) {
 		if !IsValidSudoku(data.board) {
 			t.Errorf("solve_sudo_ku error")
 		}
-		t.Logf("board:%+v", board2str(data.board))
+		//t.Logf("board:%+v", board2str(data.board))
 	}
 
 }
@@ -675,4 +675,29 @@ func board2str(board [][]byte) string {
 		s = s + "\n"
 	}
 	return s
+}
+
+func TestCountAndSay(t *testing.T) {
+	type testData struct {
+		n int
+		s string
+	}
+
+	datas := []*testData{
+		{
+			n: 1,
+			s: "1",
+		},
+		{
+			n: 4,
+			s: "1211",
+		},
+	}
+
+	for _, data := range datas {
+		if s := CountAndSay(data.n); s != data.s {
+			t.Errorf("count_and_say error. data:%+v s:%v", data, s)
+		}
+	}
+
 }

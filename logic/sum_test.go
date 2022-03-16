@@ -11,9 +11,6 @@
 package logic
 
 import (
-	"sort"
-	"strconv"
-	"strings"
 	"testing"
 )
 
@@ -85,53 +82,68 @@ func fourSumTest(t *testing.T, fn func([]int, int) [][]int) {
 
 }
 
-func arraysEqual(a [][]int, b [][]int) bool {
-	if len(a) != len(b) {
-		return false
-	}
-
-	ma := make(map[string]struct{})
-	mb := make(map[string]struct{})
-
-	for _, array := range a {
-		sort.Ints(array)
-
-		var key strings.Builder
-		for index, value := range array {
-			if index == 0 {
-				key.WriteString(strconv.Itoa(value))
-			} else {
-				key.WriteString("_" + strconv.Itoa(value))
-			}
-		}
-		ma[key.String()] = struct{}{}
-	}
-
-	for _, array := range b {
-		sort.Ints(array)
-
-		var key strings.Builder
-		for index, value := range array {
-			if index == 0 {
-				key.WriteString(strconv.Itoa(value))
-			} else {
-				key.WriteString("_" + strconv.Itoa(value))
-			}
-		}
-		mb[key.String()] = struct{}{}
-
-		if _, exist := ma[key.String()]; !exist {
-			return false
-		}
-	}
-
-	return len(ma) == len(mb)
-}
-
 func TestFourSum(t *testing.T) {
 	fourSumTest(t, FourSum)
 }
 
 func TestFourSum2(t *testing.T) {
 	fourSumTest(t, FourSum2)
+}
+
+func TestCombinationSum(t *testing.T) {
+	type testData struct {
+		candidates []int
+		target     int
+		arrays     [][]int
+	}
+
+	datas := []*testData{
+		{
+			candidates: []int{2, 3, 6, 7},
+			target:     7,
+			arrays: [][]int{
+				{2, 2, 3}, {7},
+			},
+		},
+		{
+			candidates: []int{2, 3, 5},
+			target:     8,
+			arrays: [][]int{
+				{2, 2, 2, 2}, {2, 3, 3}, {3, 5},
+			},
+		},
+		{
+			candidates: []int{2},
+			target:     1,
+			arrays:     [][]int{},
+		},
+		{
+			candidates: []int{3, 12, 9, 11, 6, 7, 8, 5, 4},
+			target:     15,
+			arrays: [][]int{
+				{3, 3, 3, 3, 3},
+				{3, 3, 3, 6},
+				{3, 3, 4, 5},
+				{3, 3, 9},
+				{3, 4, 4, 4},
+				{3, 4, 8},
+				{3, 5, 7},
+				{3, 6, 6},
+				{3, 12},
+				{4, 4, 7},
+				{4, 5, 6},
+				{4, 11},
+				{5, 5, 5},
+				{6, 9},
+				{7, 8},
+			},
+		},
+	}
+
+	for _, data := range datas {
+		if arrays := CombinationSum(data.candidates, data.target); !arraysEqual(arrays, data.arrays) {
+			t.Errorf("combination_sum error. data:%+v arrays:%v", data, arrays)
+		}
+	}
+
 }
