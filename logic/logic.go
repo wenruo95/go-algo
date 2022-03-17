@@ -841,3 +841,57 @@ func FirstMissingPositive(nums []int) int {
 
 	return nums[len(nums)-1] + 1
 }
+
+func FirstMissingPositive2(nums []int) int {
+	for i := 0; i < len(nums); i++ {
+		for nums[i] > 0 && nums[i] < len(nums) && nums[nums[i]-1] != nums[i] {
+			tmp := nums[i] - 1
+			nums[i], nums[tmp] = nums[tmp], nums[i]
+		}
+	}
+
+	for i := 0; i < len(nums); i++ {
+		if nums[i] != i+1 {
+			return i + 1
+		}
+	}
+
+	return len(nums) + 1
+}
+
+// leetcode 42: https://leetcode.com/problems/trapping-rain-water/
+func Trap(height []int) int {
+	left := make([]int, len(height))
+	right := make([]int, len(height))
+
+	var max int = -1
+	for i := 0; i < len(height); i++ {
+		if height[i] > max {
+			max = height[i]
+		}
+		left[i] = max
+	}
+
+	max = -1
+	for i := len(height) - 1; i >= 0; i-- {
+		if height[i] > max {
+			max = height[i]
+		}
+		right[i] = max
+	}
+
+	var sum int
+	for i := 0; i < len(height); i++ {
+		if left[i] > height[i] && right[i] > height[i] {
+			sum = sum + minInt(left[i]-height[i], right[i]-height[i])
+		}
+	}
+	return sum
+}
+
+func minInt(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}

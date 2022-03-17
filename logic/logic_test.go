@@ -702,7 +702,7 @@ func TestCountAndSay(t *testing.T) {
 
 }
 
-func TestFirstMissingPositive(t *testing.T) {
+func testFirstMissingPositive(t *testing.T, fn func([]int) int) {
 	type testData struct {
 		nums    []int
 		missing int
@@ -729,12 +729,49 @@ func TestFirstMissingPositive(t *testing.T) {
 			nums:    []int{-5, -3},
 			missing: 1,
 		},
+		{
+			nums:    []int{1},
+			missing: 2,
+		},
 	}
 
 	for _, data := range datas {
-		if missing := FirstMissingPositive(data.nums); missing != data.missing {
+		if missing := fn(data.nums); missing != data.missing {
 			t.Errorf("first_missing_positive error. data:%+v missing:%v", data, missing)
 		}
 	}
 
+}
+
+func TestFirstMissingPositive(t *testing.T) {
+	testFirstMissingPositive(t, FirstMissingPositive)
+}
+
+func TestFirstMissingPositive2(t *testing.T) {
+	testFirstMissingPositive(t, FirstMissingPositive2)
+}
+
+func TestTrap(t *testing.T) {
+
+	type testData struct {
+		height []int
+		sum    int
+	}
+
+	datas := []*testData{
+		{
+			height: []int{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1},
+			sum:    6,
+		},
+		{
+			height: []int{4, 2, 0, 3, 2, 5},
+			sum:    9,
+		},
+	}
+
+	for _, data := range datas {
+		if sum := Trap(data.height); sum != data.sum {
+			t.Errorf("trap error. data:%+v sum:%v", data, sum)
+		}
+	}
 }
