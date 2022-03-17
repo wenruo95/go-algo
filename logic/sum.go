@@ -243,3 +243,53 @@ func CombinationSum(candidates []int, target int) [][]int {
 
 	return fn(target)
 }
+
+// leetcode 40: https://leetcode.com/problems/combination-sum-ii/
+func CombinationSum2(candidates []int, target int) [][]int {
+
+	if len(candidates) == 0 {
+		return nil
+	}
+
+	sort.Ints(candidates)
+
+	memo := make(map[string][][]int)
+
+	var fn func(index int, target int) [][]int
+	fn = func(index, target int) [][]int {
+		if index >= len(candidates) || target < candidates[index] {
+			return nil
+		}
+		key := strconv.Itoa(index) + "_" + strconv.Itoa(target)
+		if v, exist := memo[key]; exist {
+			return v
+		}
+
+		arrays := make([][]int, 0)
+		for i := index; i < len(candidates); i++ {
+			if i-1 >= index && candidates[i-1] == candidates[i] {
+				continue
+			}
+
+			if target == candidates[i] {
+				arrays = append(arrays, []int{candidates[i]})
+				continue
+			}
+
+			lists := fn(i+1, target-candidates[i])
+			for _, list := range lists {
+				if len(list) > 0 && candidates[i] > list[0] { // 确保数据有序
+					continue
+				}
+				arrays = append(arrays,
+					append([]int{candidates[i]}, list...),
+				)
+			}
+		}
+
+		memo[key] = arrays
+		return arrays
+	}
+
+	return fn(0, target)
+}

@@ -147,3 +147,42 @@ func TestCombinationSum(t *testing.T) {
 	}
 
 }
+
+func TestCombinationSum2(t *testing.T) {
+	type testData struct {
+		candidates []int
+		target     int
+		arrays     [][]int
+	}
+
+	datas := []*testData{
+		{
+			candidates: []int{10, 1, 2, 7, 6, 1, 5},
+			target:     8,
+			arrays: [][]int{
+				{1, 1, 6}, {1, 2, 5}, {1, 7}, {2, 6},
+			},
+		},
+		{
+			candidates: []int{2, 5, 2, 1, 2},
+			target:     5,
+			arrays: [][]int{
+				{1, 2, 2}, {5},
+			},
+		},
+		{
+			candidates: []int{4, 1, 1, 4, 4, 4, 4, 2, 3, 5},
+			target:     10,
+			arrays: [][]int{
+				{1, 1, 3, 5}, {1, 1, 4, 4}, {1, 2, 3, 4}, {1, 4, 5}, {2, 3, 5}, {2, 4, 4},
+			},
+		},
+	}
+
+	for _, data := range datas {
+		if arrays := CombinationSum2(data.candidates, data.target); !arraysEqual(arrays, data.arrays) {
+			t.Errorf("combination_sum_2 error. data:%+v arrays:%v", data, arrays)
+		}
+	}
+
+}

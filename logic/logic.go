@@ -13,6 +13,7 @@ package logic
 import (
 	"container/list"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -815,4 +816,28 @@ func CountAndSay(n int) string {
 	}
 
 	return s
+}
+
+// leetcode 41: https://leetcode.com/problems/first-missing-positive/
+func FirstMissingPositive(nums []int) int {
+	sort.Ints(nums)
+
+	var firstPositive int = -1
+	for i := 0; i < len(nums); i++ {
+		if nums[i] > 0 && firstPositive == -1 {
+			firstPositive = nums[i]
+			if firstPositive != 1 {
+				break
+			}
+		}
+
+		if i-1 >= 0 && nums[i]-nums[i-1] > 1 && nums[i-1] > 0 {
+			return nums[i-1] + 1
+		}
+	}
+	if firstPositive != 1 {
+		return 1
+	}
+
+	return nums[len(nums)-1] + 1
 }

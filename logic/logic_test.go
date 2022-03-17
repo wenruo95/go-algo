@@ -701,3 +701,40 @@ func TestCountAndSay(t *testing.T) {
 	}
 
 }
+
+func TestFirstMissingPositive(t *testing.T) {
+	type testData struct {
+		nums    []int
+		missing int
+	}
+
+	datas := []*testData{
+		{
+			nums:    []int{1, 2, 0},
+			missing: 3,
+		},
+		{
+			nums:    []int{3, 4, -1, 1},
+			missing: 2,
+		},
+		{
+			nums:    []int{7, 8, 9, 11, 12},
+			missing: 1,
+		},
+		{
+			nums:    []int{-5},
+			missing: 1,
+		},
+		{
+			nums:    []int{-5, -3},
+			missing: 1,
+		},
+	}
+
+	for _, data := range datas {
+		if missing := FirstMissingPositive(data.nums); missing != data.missing {
+			t.Errorf("first_missing_positive error. data:%+v missing:%v", data, missing)
+		}
+	}
+
+}
