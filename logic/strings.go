@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 )
 
 // leetcode 438: https://leetcode.com/problems/find-all-anagrams-in-a-string/
@@ -507,4 +508,81 @@ func StrCalculate(str string) float64 {
 	}
 
 	return sum
+}
+
+// leetcode 43: https://leetcode.com/problems/multiply-strings/
+func Multiply(num1 string, num2 string) string {
+	var sum string = "0"
+	for i := len(num1) - 1; i >= 0; i-- {
+		for j := len(num2) - 1; j >= 0; j-- {
+			num := int(num1[i]-'0') * int(num2[j]-'0')
+			if num > 0 {
+				zeroCount := (len(num1) - 1 - i) + (len(num2) - 1 - j)
+				sum = StrAdd(sum, strconv.Itoa(num)+strings.Repeat("0", zeroCount))
+			}
+		}
+	}
+	return sum
+}
+
+func StrAdd(num1 string, num2 string) string {
+	var bts []byte
+	if len(num1) > len(num2) {
+		bts = make([]byte, len(num1)+1)
+	} else {
+		bts = make([]byte, len(num2)+1)
+	}
+
+	i1, i2 := len(num1)-1, len(num2)-1
+	pos, high := len(bts)-1, 0
+	for i1 >= 0 || i2 >= 0 || high > 0 {
+		var num int
+		if i1 >= 0 {
+			num = num + int(num1[i1]-'0')
+		}
+		if i2 >= 0 {
+			num = num + int(num2[i2]-'0')
+		}
+
+		num = num + high
+		high = num / 10
+		bts[pos] = byte(num%10) + '0'
+
+		i1 = i1 - 1
+		i2 = i2 - 1
+		pos = pos - 1
+	}
+
+	if pos == 0 {
+		return string(bts[1:])
+	}
+	return string(bts)
+}
+
+func Multiply2(num1 string, num2 string) string {
+
+	arr := make([]int, len(num1)+len(num2))
+	for i := len(num1) - 1; i >= 0; i-- {
+		for j := len(num2) - 1; j >= 0; j-- {
+			p1 := i + j + 1
+			num := int(num1[i]-'0')*int(num2[j]-'0') + arr[p1]
+
+			arr[p1] = num % 10
+			arr[p1-1] = arr[p1-1] + num/10
+		}
+	}
+
+	sum := &strings.Builder{}
+	sum.Grow(len(arr))
+	for i := 0; i < len(arr); i++ {
+		if sum.Len() == 0 && arr[i] == 0 {
+			continue
+		}
+		sum.WriteByte(byte(arr[i]) + '0')
+	}
+
+	if sum.Len() == 0 {
+		return "0"
+	}
+	return sum.String()
 }

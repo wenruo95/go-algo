@@ -401,3 +401,43 @@ func TestStrCalculate(t *testing.T) {
 		}
 	}
 }
+
+func testMultiply(t *testing.T, fn func(string, string) string) {
+
+	type testData struct {
+		s1     string
+		s2     string
+		result string
+	}
+
+	datas := []*testData{
+		{s1: "1", s2: "2", result: "2"},
+		{s1: "0", s2: "2", result: "0"},
+		{s1: "9", s2: "2", result: "18"},
+		{s1: "10", s2: "2", result: "20"},
+		{s1: "10", s2: "10", result: "100"},
+		{s1: "20", s2: "50", result: "1000"},
+		{s1: "234", s2: "456", result: "106704"},
+		{s1: "123", s2: "456", result: "56088"},
+		{s1: "0", s2: "9133", result: "0"},
+		{s1: "498828660196", s2: "840477629533", result: "419254329864656431168468"},
+	}
+
+	for _, data := range datas {
+		if result := fn(data.s1, data.s2); result != data.result {
+			t.Errorf("multiply error. data:%+v result:%v", data, result)
+		}
+		if result := fn(data.s2, data.s1); result != data.result {
+			t.Errorf("multiply error. data:%+v result:%v", data, result)
+		}
+	}
+
+}
+
+func TestMultiply(t *testing.T) {
+	testMultiply(t, Multiply)
+}
+
+func TestMultiply2(t *testing.T) {
+	testMultiply(t, Multiply2)
+}
