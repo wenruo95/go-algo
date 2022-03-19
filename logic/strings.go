@@ -586,3 +586,74 @@ func Multiply2(num1 string, num2 string) string {
 	}
 	return sum.String()
 }
+
+// leetcode 44: https://leetcode.com/problems/wildcard-matching/
+/*
+func IsMatch(s string, p string) bool {
+	// 递归会有栈溢出问题
+	var match func(s string, index int, p string, pindex int) bool
+	match = func(s string, index int, p string, pindex int) bool {
+		if len(p) == pindex {
+			return len(s) == index
+		}
+		if len(s) == index {
+			if p[pindex] == '*' {
+				return match(s, index, p, pindex+1)
+			}
+			return false
+		}
+
+		if s[index] == p[pindex] {
+			return match(s, index+1, p, pindex+1)
+		}
+
+		if p[pindex] == '?' {
+			return match(s, index+1, p, pindex+1)
+		}
+		if p[pindex] == '*' {
+			return match(s, index+1, p, pindex) || match(s, index, p, pindex+1)
+		}
+		return false
+	}
+
+	return match(s, 0, p, 0)
+}
+*/
+
+func IsMatch(s string, p string) bool {
+	var index, pindex int
+	var star, backtrackIdx int = -1, -1
+	for index < len(s) {
+		if pindex < len(p) && (s[index] == p[pindex] || p[pindex] == '?') {
+			index = index + 1
+			pindex = pindex + 1
+			continue
+		}
+
+		if pindex < len(p) && p[pindex] == '*' { // 默认忽略*
+			star = pindex
+			backtrackIdx = index
+			pindex = pindex + 1
+			continue
+		}
+
+		if star >= 0 && p[star] == '*' { // 回溯
+			backtrackIdx = backtrackIdx + 1
+			index = backtrackIdx
+			pindex = star
+			continue
+		}
+
+		return false
+	}
+
+	for pindex < len(p) {
+		if p[pindex] == '*' {
+			pindex = pindex + 1
+			continue
+		}
+		break
+	}
+
+	return pindex == len(p)
+}

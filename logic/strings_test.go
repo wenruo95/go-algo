@@ -441,3 +441,57 @@ func TestMultiply(t *testing.T) {
 func TestMultiply2(t *testing.T) {
 	testMultiply(t, Multiply2)
 }
+
+func TestIsMatch(t *testing.T) {
+	type testData struct {
+		s string
+		p string
+		b bool
+	}
+
+	datas := []*testData{
+		{
+			s: "aa",
+			p: "a",
+			b: false,
+		},
+		{
+			s: "aa",
+			p: "*",
+			b: true,
+		},
+		{
+			s: "cb",
+			p: "?a",
+			b: false,
+		},
+		{
+			s: "adceb",
+			p: "*a*b",
+			b: true,
+		},
+		{
+			s: "aaaabaaaabbbbaabbbaabbaababbabbaaaababaaabbbbbbaabbbabababbaaabaabaaaaaabbaabbbbaababbababaabbbaababbbba",
+			p: "*****b*aba***babaa*bbaba***a*aaba*b*aa**a*b**ba***a*a*",
+			b: true,
+		},
+		{
+			s: "acdcb",
+			p: "a*c?b",
+			b: false,
+		},
+		{
+			s: "a",
+			p: "",
+			b: false,
+		},
+	}
+
+	for _, data := range datas {
+		if b := IsMatch(data.s, data.p); b != data.b {
+			t.Errorf("is_match error. data:%+v b:%v", data, b)
+		}
+
+	}
+
+}
