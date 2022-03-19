@@ -98,3 +98,19 @@ func arraysEqual(a [][]int, b [][]int) bool {
 
 	return len(ma) == len(mb)
 }
+
+// GCD: Greatest common divisor(最大公约数)
+func MaxGCD(m, n int) int {
+	mod := m % n
+	if mod == 0 {
+		return n
+	}
+	return MaxGCD(n, mod)
+}
+
+func intMin(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}

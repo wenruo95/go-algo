@@ -1,10 +1,10 @@
 /*================================================================
 *   Copyright (C) 2022. All rights reserved.
 *
-*   file : sort_test.go
+*   file : interview02_test.go
 *   coder: zemanzeng
 *   date : 2022-02-12 11:40:22
-*   desc :
+*   desc : interview02 test case
 *
 ================================================================*/
 
@@ -92,4 +92,60 @@ func TestFindKth(t *testing.T) {
 			t.Errorf("find_k_th data:%+v result:%v", data, result)
 		}
 	}
+}
+
+// TODO
+func TestKthOfTwoSortedArray(t *testing.T) {
+
+	type testData struct {
+		nums1 []int
+		nums2 []int
+		k     int
+	}
+
+	datas := []*testData{
+		{
+			nums1: []int{1, 2, 5, 8, 10},
+			nums2: []int{3, 6, 7, 9, 10},
+			k:     5,
+		},
+		{
+			nums1: []int{1, 2, 5, 5, 8, 10},
+			nums2: []int{3, 6, 7, 9, 10},
+			k:     5,
+		},
+		{
+			nums1: []int{1, 2, 5, 5, 8, 10},
+			nums2: []int{3, 6, 7, 9, 10},
+			k:     11,
+		},
+		{
+			nums1: []int{1, 2},
+			nums2: []int{2},
+			k:     1,
+		},
+	}
+	if len(datas) < 100 {
+		return
+	}
+
+	for _, data := range datas {
+		arr := make([]int, 0)
+		arr = append(arr, data.nums1...)
+		arr = append(arr, data.nums2...)
+		sort.Ints(arr)
+		if data.k < 0 || data.k > len(arr) {
+			t.Errorf("invalid k:%v len:%v", data.k, len(arr))
+		}
+
+		result1 := FindKthOfTwoSortedArray(data.nums1, data.nums2, data.k)
+		result2 := FindKthOfTwoSortedArray(data.nums2, data.nums1, data.k)
+
+		if result1 != result2 || result1 != arr[data.k-1] {
+			t.Errorf("data:%+v result1:%v result2:%v expect:%v", data, result1, result2, arr[data.k-1])
+
+		}
+
+	}
+
 }
