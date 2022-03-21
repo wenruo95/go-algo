@@ -1,10 +1,10 @@
 /*================================================================
 *   Copyright (C) 2022. All rights reserved.
 *
-*   file : logic04.go
+*   file : leetcode40.go
 *   coder: zemanzeng
 *   date : 2022-03-19 22:00:37
-*   desc :
+*   desc : leetcode 40~49
 *
 ================================================================*/
 
@@ -261,14 +261,102 @@ func IsMatch(s string, p string) bool {
 }
 
 // leetcode 45: https://leetcode.com/problems/jump-game-ii/
-func JumpGame(nums []int) int {
+func JumpGameII(nums []int) int {
+	memo := make(map[int]int)
 
-	var minJumpFn func(start int) int
+	var minJumpFn func(left int) int
+	minJumpFn = func(left int) int {
+		if left >= len(nums)-1 {
+			return 0
+		}
+		if v, exist := memo[left]; exist {
+			return v
+		}
 
-	minJumpFn = func(start int) int {
+		var min int = -1
+		for step := 1; step <= nums[left]; step++ {
+			if m := minJumpFn(left + step); min == -1 || m < min {
+				min = m
+			}
+		}
+		if min == -1 {
+			return minJumpFn(left+1) + 1
+		}
+		min = min + 1
 
-		return 0
+		memo[left] = min
+		return min
 	}
 
 	return minJumpFn(0)
+}
+
+func JumpGameII2(nums []int) int {
+	var step, curFarthest, curEnd int
+
+	for i := 0; i < len(nums)-1; i++ {
+		if curFarthest < i+nums[i] {
+			curFarthest = i + nums[i]
+		}
+
+		if i == curEnd {
+			step = step + 1
+			curEnd = curFarthest
+		}
+	}
+
+	return step
+}
+
+// leetcode 46: https://leetcode.com/problems/permutations/
+func Permute(nums []int) [][]int {
+
+	var fn func(begin int)
+
+	arrays := make([][]int, 0)
+	fn = func(begin int) {
+		if begin >= len(nums) {
+			arrays = append(arrays, append([]int{}, nums[0:]...))
+			return
+		}
+
+		for i := begin; i < len(nums); i++ {
+			nums[i], nums[begin] = nums[begin], nums[i]
+			fn(begin + 1)
+			nums[begin], nums[i] = nums[i], nums[begin]
+		}
+
+	}
+
+	fn(0)
+	return arrays
+}
+
+// leetcode 47: https://leetcode.com/problems/permutations-ii/
+func PermuteUnique(nums []int) [][]int {
+	sort.Ints(nums)
+
+	var fn func(begin int)
+
+	arrays := make([][]int, 0)
+	fn = func(begin int) {
+		if begin >= len(nums) {
+			arrays = append(arrays, append([]int{}, nums[0:]...))
+			return
+		}
+
+		for i := begin; i < len(nums); i++ {
+			if (i != begin && nums[i] == nums[begin]) || (i-1 >= begin && nums[i] == nums[i-1]) {
+				continue
+			}
+
+			nums[i], nums[begin] = nums[begin], nums[i]
+			fn(begin + 1)
+			nums[begin], nums[i] = nums[i], nums[begin]
+		}
+
+	}
+
+	fn(0)
+	return arrays
 }

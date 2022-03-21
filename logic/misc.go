@@ -56,7 +56,7 @@ func stringListItemEqual(dst, src []string) bool {
 	return true
 }
 
-func arraysEqual(a [][]int, b [][]int) bool {
+func arraysEqual(a [][]int, b [][]int, sortFlag bool) bool {
 	if len(a) != len(b) {
 		return false
 	}
@@ -65,7 +65,9 @@ func arraysEqual(a [][]int, b [][]int) bool {
 	mb := make(map[string]struct{})
 
 	for _, array := range a {
-		sort.Ints(array)
+		if sortFlag {
+			sort.Ints(array)
+		}
 
 		var key strings.Builder
 		for index, value := range array {
@@ -79,7 +81,9 @@ func arraysEqual(a [][]int, b [][]int) bool {
 	}
 
 	for _, array := range b {
-		sort.Ints(array)
+		if sortFlag {
+			sort.Ints(array)
+		}
 
 		var key strings.Builder
 		for index, value := range array {

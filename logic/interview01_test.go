@@ -47,7 +47,7 @@ func TestMaxSplitN(t *testing.T) {
 
 }
 
-func TestPermutations(t *testing.T) {
+func TestStrPermutations(t *testing.T) {
 	type permutationsResult struct {
 	}
 

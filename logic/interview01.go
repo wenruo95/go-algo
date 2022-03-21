@@ -125,7 +125,7 @@ func FindMaxSeq(c int, sizes []int) []int {
 
 // 字符的全排列问题: 如 "12" 排列有"1" "2" "12"
 // TODO
-func Permutations(s string) []string {
+func StrPermutations(s string) []string {
 	chcnt := make(map[string]int)
 	for _, ch := range s {
 		chcnt[string(ch)] = chcnt[string(ch)] + 1

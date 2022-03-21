@@ -159,7 +159,7 @@ func fourSumTest(t *testing.T, fn func([]int, int) [][]int) {
 
 	for _, data := range datas {
 		arrays := fn(data.nums, data.target)
-		if !arraysEqual(arrays, data.arrays) {
+		if !arraysEqual(arrays, data.arrays, true) {
 			t.Errorf("four_data data:%+v arrays:%+v", data, arrays)
 		}
 	}

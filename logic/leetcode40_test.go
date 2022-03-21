@@ -10,7 +10,9 @@
 
 package logic
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestCombinationSum(t *testing.T) {
 	type testData struct {
@@ -63,7 +65,7 @@ func TestCombinationSum(t *testing.T) {
 	}
 
 	for _, data := range datas {
-		if arrays := CombinationSum(data.candidates, data.target); !arraysEqual(arrays, data.arrays) {
+		if arrays := CombinationSum(data.candidates, data.target); !arraysEqual(arrays, data.arrays, true) {
 			t.Errorf("combination_sum error. data:%+v arrays:%v", data, arrays)
 		}
 	}
@@ -102,7 +104,7 @@ func TestCombinationSum2(t *testing.T) {
 	}
 
 	for _, data := range datas {
-		if arrays := CombinationSum2(data.candidates, data.target); !arraysEqual(arrays, data.arrays) {
+		if arrays := CombinationSum2(data.candidates, data.target); !arraysEqual(arrays, data.arrays, true) {
 			t.Errorf("combination_sum_2 error. data:%+v arrays:%v", data, arrays)
 		}
 	}
@@ -275,6 +277,122 @@ func TestIsMatch(t *testing.T) {
 			t.Errorf("is_match error. data:%+v b:%v", data, b)
 		}
 
+	}
+
+}
+
+func testJumpGameII(t *testing.T, fn func([]int) int) {
+	type testData struct {
+		nums []int
+		step int
+	}
+
+	datas := []*testData{
+		{
+			nums: []int{2, 3, 1, 1, 4},
+			step: 2,
+		},
+		{
+			nums: []int{2, 3, 0, 1, 4},
+			step: 2,
+		},
+		{
+			nums: []int{2},
+			step: 0,
+		},
+		{
+			nums: []int{2, 4},
+			step: 1,
+		},
+	}
+
+	for _, data := range datas {
+		if step := fn(data.nums); step != data.step {
+			t.Errorf("jump_game_ii error. data:%+v step:%v", data, step)
+		}
+	}
+}
+
+func TestJumpGameII(t *testing.T) {
+	testJumpGameII(t, JumpGameII)
+}
+
+func TestJumpGameII2(t *testing.T) {
+	testJumpGameII(t, JumpGameII2)
+}
+
+func TestPermute(t *testing.T) {
+	type testData struct {
+		nums   []int
+		arrays [][]int
+	}
+	datas := []*testData{
+		{
+			nums: []int{1, 2, 3},
+			arrays: [][]int{
+				{1, 2, 3}, {1, 3, 2},
+				{2, 1, 3}, {2, 3, 1},
+				{3, 1, 2}, {3, 2, 1},
+			},
+		},
+		{
+			nums:   []int{1},
+			arrays: [][]int{{1}},
+		},
+	}
+
+	for _, data := range datas {
+		if arrays := Permute(data.nums); !arraysEqual(arrays, data.arrays, false) {
+			t.Errorf("permute error. data:%+v arrays:%v", data, arrays)
+		}
+	}
+
+}
+
+func TestPermuteUnique(t *testing.T) {
+	type testData struct {
+		nums   []int
+		arrays [][]int
+	}
+	datas := []*testData{
+		{
+			nums: []int{1, 2, 3},
+			arrays: [][]int{
+				{1, 2, 3}, {1, 3, 2},
+				{2, 1, 3}, {2, 3, 1},
+				{3, 1, 2}, {3, 2, 1},
+			},
+		},
+		{
+			nums:   []int{1},
+			arrays: [][]int{{1}},
+		},
+		{
+			nums: []int{1, 2, 1},
+			arrays: [][]int{
+				{1, 1, 2}, {1, 2, 1}, {2, 1, 1},
+			},
+		},
+		{
+			nums: []int{2, 2, 1, 1},
+			arrays: [][]int{
+				{1, 1, 2, 2}, {1, 2, 1, 2}, {1, 2, 2, 1}, {2, 1, 1, 2}, {2, 1, 2, 1}, {2, 2, 1, 1},
+			},
+		},
+		{
+			nums: []int{0, 1, 0, 0, 9},
+			arrays: [][]int{
+				{0, 0, 0, 1, 9}, {0, 0, 0, 9, 1}, {0, 0, 1, 0, 9}, {0, 0, 1, 9, 0}, {0, 0, 9, 0, 1}, {0, 0, 9, 1, 0}, {0, 1, 0, 0, 9}, {0, 1, 0, 9, 0}, {0, 1, 9, 0, 0}, {0, 9, 0, 0, 1}, {0, 9, 0, 1, 0}, {0, 9, 1, 0, 0},
+				{1, 0, 0, 0, 9}, {1, 0, 0, 9, 0}, {1, 0, 9, 0, 0}, {1, 9, 0, 0, 0},
+				{9, 0, 0, 0, 1}, {9, 0, 0, 1, 0}, {9, 0, 1, 0, 0}, {9, 1, 0, 0, 0},
+			},
+		},
+	}
+
+	for _, data := range datas {
+		if arrays := PermuteUnique(data.nums); !arraysEqual(arrays, data.arrays, false) {
+			t.Errorf("permute_unique error. data:%+v arrays:%v", data, arrays)
+		}
 	}
 
 }
