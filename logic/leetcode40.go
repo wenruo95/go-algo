@@ -333,30 +333,41 @@ func Permute(nums []int) [][]int {
 }
 
 // leetcode 47: https://leetcode.com/problems/permutations-ii/
+// ideas refer from labuladong: https://labuladong.gitee.io/algo/4/30/109/
 func PermuteUnique(nums []int) [][]int {
 	sort.Ints(nums)
 
-	var fn func(begin int)
+	var fn func()
 
 	arrays := make([][]int, 0)
-	fn = func(begin int) {
-		if begin >= len(nums) {
-			arrays = append(arrays, append([]int{}, nums[0:]...))
+
+	used := make([]bool, len(nums))
+	track := make([]int, 0)
+	fn = func() {
+		if len(track) >= len(nums) {
+			arrays = append(arrays, append([]int{}, track...))
 			return
 		}
 
-		for i := begin; i < len(nums); i++ {
-			if (i != begin && nums[i] == nums[begin]) || (i-1 >= begin && nums[i] == nums[i-1]) {
+		for i := 0; i < len(nums); i++ {
+			if used[i] {
+				continue
+			}
+			if i > 0 && nums[i] == nums[i-1] && !used[i-1] {
 				continue
 			}
 
-			nums[i], nums[begin] = nums[begin], nums[i]
-			fn(begin + 1)
-			nums[begin], nums[i] = nums[i], nums[begin]
+			used[i] = true
+			track = append(track, nums[i])
+
+			fn()
+
+			track = track[0 : len(track)-1]
+			used[i] = false
 		}
 
 	}
 
-	fn(0)
+	fn()
 	return arrays
 }
