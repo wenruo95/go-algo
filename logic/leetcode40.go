@@ -371,3 +371,45 @@ func PermuteUnique(nums []int) [][]int {
 	fn()
 	return arrays
 }
+
+// leetcode 48: https://leetcode.com/problems/rotate-image/
+func Rotate(matrix [][]int) {
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return
+	}
+
+	// 第i层
+	for i := 0; i < len(matrix)/2; i++ {
+
+		// 左上角元素
+		for j := i; j <= len(matrix)-i-2; j++ {
+
+			var tmp, row, column int
+			// 右下: row, column => row + (j - i), len(matrix) -1 - i
+			{
+				row, column = i, j
+				tmp, matrix[row+j-i][len(matrix)-1-i] = matrix[row+j-i][len(matrix)-1-i], matrix[row][column]
+			}
+
+			// 下左 row, column => len(matrix) -1 - i, column - (j - i)
+			{
+				row, column = row+j-i, len(matrix)-1-i
+				matrix[len(matrix)-1-i][column-(j-i)], tmp = tmp, matrix[len(matrix)-1-i][column-(j-i)]
+			}
+
+			// 左上 row, column => len(matrix) - ( j - i ), i
+			{
+				row, column = len(matrix)-1-i, column-(j-i)
+				matrix[row-(j-i)][i], tmp = tmp, matrix[row-(j-i)][i]
+			}
+
+			// 上右
+			{
+				row, column = row-(j-i), i
+				matrix[i][j] = tmp
+			}
+
+		}
+	}
+
+}

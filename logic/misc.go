@@ -118,3 +118,14 @@ func intMin(a, b int) int {
 	}
 	return a
 }
+
+func arrays2str(arrays [][]int) string {
+	var s string = "\n"
+	for _, array := range arrays {
+		for _, item := range array {
+			s = s + strconv.Itoa(item) + "\t"
+		}
+		s = s + "\n"
+	}
+	return s
+}
