@@ -421,3 +421,31 @@ func TestRotate(t *testing.T) {
 		}
 	}
 }
+
+func TestGroupAnagrams(t *testing.T) {
+	type testData struct {
+		strs   []string
+		arrays [][]string
+	}
+
+	datas := []*testData{
+		{
+			strs:   []string{"eat", "tea", "tan", "ate", "nat", "bat"},
+			arrays: [][]string{{"bat"}, {"nat", "tan"}, {"ate", "eat", "tea"}},
+		},
+		{
+			strs:   []string{""},
+			arrays: [][]string{{""}},
+		},
+		{
+			strs:   []string{"a"},
+			arrays: [][]string{{"a"}},
+		},
+	}
+	for _, data := range datas {
+		if arrays := GroupAnagrams(data.strs); !stringArraysEqual(arrays, data.arrays) {
+			t.Errorf("group_anagrams error. data:%+v arrays:%+v", data, arrays)
+		}
+	}
+
+}

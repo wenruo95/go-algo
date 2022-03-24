@@ -413,3 +413,31 @@ func Rotate(matrix [][]int) {
 	}
 
 }
+
+// leetcode 49: https://leetcode.com/problems/group-anagrams/
+func GroupAnagrams(strs []string) [][]string {
+	groups := make(map[[26]int][]int)
+
+	for index, str := range strs {
+		var array [26]int
+		for _, c := range str {
+			array[c-'a']++
+		}
+		if v, exist := groups[array]; exist {
+			groups[array] = append(v, index)
+		} else {
+			groups[array] = []int{index}
+		}
+	}
+
+	arrays := make([][]string, 0)
+	for _, indexs := range groups {
+		array := make([]string, len(indexs))
+		for i, index := range indexs {
+			array[i] = strs[index]
+		}
+		arrays = append(arrays, array)
+	}
+
+	return arrays
+}
