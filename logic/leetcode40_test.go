@@ -443,7 +443,7 @@ func TestGroupAnagrams(t *testing.T) {
 		},
 	}
 	for _, data := range datas {
-		if arrays := GroupAnagrams(data.strs); !stringArraysEqual(arrays, data.arrays) {
+		if arrays := GroupAnagrams(data.strs); !stringArraysEqual(arrays, data.arrays, true) {
 			t.Errorf("group_anagrams error. data:%+v arrays:%+v", data, arrays)
 		}
 	}

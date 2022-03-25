@@ -40,16 +40,20 @@ func intListEqual(dst, src []int) bool {
 	return true
 }
 
-func stringArraysEqual(dst, src [][]string) bool {
+func stringArraysEqual(dst, src [][]string, sortFlag bool) bool {
 	listA := make([]string, 0, len(dst))
 	for _, list := range dst {
-		sort.Strings(list)
+		if sortFlag {
+			sort.Strings(list)
+		}
 		listA = append(listA, strings.Join(list, "##"))
 	}
 
 	listB := make([]string, 0, len(src))
 	for _, list := range src {
-		sort.Strings(list)
+		if sortFlag {
+			sort.Strings(list)
+		}
 		listB = append(listB, strings.Join(list, "##"))
 	}
 
