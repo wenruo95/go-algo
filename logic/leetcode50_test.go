@@ -73,3 +73,21 @@ func TestSolveNQueens(t *testing.T) {
 	}
 
 }
+
+func TestTotalNQueens(t *testing.T) {
+	type testData struct {
+		n     int
+		total int
+	}
+
+	datas := []*testData{
+		{n: 1, total: 1},
+		{n: 4, total: 2},
+	}
+
+	for _, data := range datas {
+		if total := TotalNQueens(data.n); total != data.total {
+			t.Errorf("total_n_queens error. data:%+v total:%v", data, total)
+		}
+	}
+}

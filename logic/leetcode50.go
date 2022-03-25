@@ -96,3 +96,53 @@ func SolveNQueens(n int) [][]string {
 	queens(array, n, 0)
 	return arrays
 }
+
+// leetcode 52: https://leetcode.com/problems/n-queens-ii/
+func TotalNQueens(n int) int {
+
+	array := make([][]byte, n)
+	for i := 0; i < n; i++ {
+		bts := make([]byte, n)
+		for j := 0; j < n; j++ {
+			bts[j] = '.'
+		}
+		array[i] = bts
+	}
+
+	var queens func(array [][]byte, n int, row int)
+	var check func(array [][]byte, n int, row int, column int) bool
+
+	var cnt int
+	queens = func(array [][]byte, n int, row int) {
+		if row >= n {
+			cnt = cnt + 1
+			return
+		}
+
+		for y := 0; y < n; y++ {
+			if check(array, n, row, y) {
+				array[row][y] = 'Q'
+				queens(array, n, row+1)
+				array[row][y] = '.'
+			}
+		}
+	}
+
+	check = func(array [][]byte, n int, row int, column int) bool {
+		for x := row - 1; x >= 0; x-- {
+			if array[x][column] == 'Q' {
+				return false
+			}
+			if slope := column - (row - x); slope >= 0 && array[x][slope] == 'Q' {
+				return false
+			}
+			if slope := column + (row - x); slope < n && array[x][slope] == 'Q' {
+				return false
+			}
+		}
+		return true
+	}
+
+	queens(array, n, 0)
+	return cnt
+}
