@@ -146,3 +146,90 @@ func TotalNQueens(n int) int {
 	queens(array, n, 0)
 	return cnt
 }
+
+// leetcode 53: https://leetcode.com/problems/maximum-subarray/
+func MaxSubArray(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	var max int = nums[0]
+	for i := 0; i < len(nums); i++ {
+		var sum int
+		for j := i; j < len(nums); j++ {
+			sum = sum + nums[j]
+			if sum > max {
+				max = sum
+			}
+
+		}
+	}
+	return max
+}
+
+func MaxSubArray2(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	dp := make([]int, len(nums))
+	dp[0] = nums[0]
+	max := dp[0]
+
+	for i := 1; i < len(nums); i++ {
+		dp[i] = nums[i] + intMax(dp[i-1], 0)
+		max = intMax(max, dp[i])
+	}
+	return max
+}
+
+// leetcode 54: https://leetcode.com/problems/spiral-matrix/
+func SpiralOrder(matrix [][]int) []int {
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return nil
+	}
+
+	row, column := len(matrix), len(matrix[0])
+
+	cnt := intMin(row, column) / 2
+	if intMin(row, column)%2 == 1 {
+		cnt = cnt + 1
+	}
+
+	list := make([]int, 0)
+	for i := 0; i < cnt; i++ { // 最外层
+		if i == row-i-1 && i == column-i-1 { // 中间只有一个元素的情况
+			list = append(list, matrix[i][i])
+			continue
+		}
+
+		// 右
+		for y := i; y <= column-i-1; y++ {
+			list = append(list, matrix[i][y])
+		}
+
+		// 下
+		if i == row-i-1 {
+			break
+		}
+		for x := i + 1; x < row-i-1; x++ {
+			list = append(list, matrix[x][column-i-1])
+		}
+
+		// 左
+		for y := column - i - 1; y >= i; y-- {
+			list = append(list, matrix[row-i-1][y])
+		}
+
+		// 上
+		if i == column-i-1 {
+			break
+		}
+		for x := row - i - 2; x > i; x-- {
+			list = append(list, matrix[x][i])
+		}
+
+	}
+
+	return list
+}

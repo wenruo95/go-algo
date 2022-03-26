@@ -139,6 +139,13 @@ func intMin(a, b int) int {
 	return a
 }
 
+func intMax(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
 func arrays2str(arrays [][]int) string {
 	var s string = "\n"
 	for _, array := range arrays {
