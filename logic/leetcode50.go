@@ -12,6 +12,7 @@ package logic
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 )
 
@@ -232,4 +233,54 @@ func SpiralOrder(matrix [][]int) []int {
 	}
 
 	return list
+}
+
+// leetcode 55: https://leetcode.com/problems/jump-game/
+func CanJump(nums []int) bool {
+	var farthest int
+	for i := 0; i < len(nums)-1; i++ {
+		if farthest >= i {
+			farthest = intMax(farthest, i+nums[i])
+		}
+	}
+	return farthest >= len(nums)-1
+}
+
+// leetcode 56: https://leetcode.com/problems/merge-intervals/
+func MergeIntervals(intervals [][]int) [][]int {
+	left2Index := make(map[int][]int)
+	for index, collect := range intervals {
+		if v, exist := left2Index[collect[0]]; exist {
+			left2Index[collect[0]] = append(v, index)
+		} else {
+			left2Index[collect[0]] = []int{index}
+		}
+	}
+
+	lefts := make([]int, 0)
+	for left := range left2Index {
+		lefts = append(lefts, left)
+	}
+	sort.Ints(lefts)
+
+	lists := make([][]int, 0)
+
+	var low, high int = -1, -1
+	for index, left := range lefts {
+		if low == -1 {
+			low = left
+		}
+
+		for _, index := range left2Index[left] {
+			high = intMax(intervals[index][1], high)
+		}
+
+		if index >= len(lefts)-1 || high < lefts[index+1] {
+			lists = append(lists, []int{low, high})
+			low = -1
+		}
+
+	}
+
+	return lists
 }

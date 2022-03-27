@@ -170,3 +170,62 @@ func TestSpiralOrder(t *testing.T) {
 	}
 
 }
+
+func TestCanJump(t *testing.T) {
+	type testData struct {
+		nums []int
+		jump bool
+	}
+
+	datas := []*testData{
+		{
+			nums: []int{2, 3, 1, 1, 4},
+			jump: true,
+		},
+		{
+			nums: []int{3, 2, 1, 0, 4},
+			jump: false,
+		},
+		{
+			nums: []int{1, 2},
+			jump: true,
+		},
+	}
+
+	for _, data := range datas {
+		if jump := CanJump(data.nums); jump != data.jump {
+			t.Errorf("can_jump error. data:%+v jump:%v", data, jump)
+		}
+	}
+}
+
+func TestMergeIntervals(t *testing.T) {
+	type testData struct {
+		intervals [][]int
+		arrays    [][]int
+	}
+
+	datas := []*testData{
+		{
+			intervals: [][]int{{1, 3}, {2, 6}, {8, 10}, {15, 18}},
+			arrays:    [][]int{{1, 6}, {8, 10}, {15, 18}},
+		},
+		{
+			intervals: [][]int{{1, 4}, {4, 5}},
+			arrays:    [][]int{{1, 5}},
+		},
+		{
+			intervals: [][]int{{1, 4}, {5, 6}},
+			arrays:    [][]int{{1, 4}, {5, 6}},
+		},
+	}
+
+	for _, data := range datas {
+		arrays := MergeIntervals(data.intervals)
+		if !arraysEqual(arrays, data.arrays, false) {
+			t.Errorf("merge_intervals error. data:%+v arrays:%v", data, arrays)
+
+		}
+	}
+
+}
