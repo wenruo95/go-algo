@@ -294,3 +294,65 @@ func TestMergeInsertInterval(t *testing.T) {
 	}
 
 }
+
+func TestLengthOfLastWord(t *testing.T) {
+	type testData struct {
+		s      string
+		length int
+	}
+
+	datas := []*testData{
+		{
+			s:      "Hello World",
+			length: 5,
+		},
+		{
+			s:      "   fly me   to   the moon  ",
+			length: 4,
+		},
+		{
+			s:      "luffy is still joyboy",
+			length: 6,
+		},
+		{
+			s:      "Hello",
+			length: 5,
+		},
+	}
+
+	for _, data := range datas {
+		if length := LengthOfLastWord(data.s); length != data.length {
+			t.Errorf("length_of_last_word error. data:%+v length:%v", data, length)
+		}
+	}
+
+}
+
+func TestGenerateMatrix(t *testing.T) {
+	type testData struct {
+		n      int
+		matrix [][]int
+	}
+
+	datas := []*testData{
+		{
+			n:      2,
+			matrix: [][]int{{1, 2}, {4, 3}},
+		},
+		{
+			n:      3,
+			matrix: [][]int{{1, 2, 3}, {8, 9, 4}, {7, 6, 5}},
+		},
+		{
+			n:      4,
+			matrix: [][]int{{1, 2, 3, 4}, {12, 13, 14, 5}, {11, 16, 15, 6}, {10, 9, 8, 7}},
+		},
+	}
+
+	for _, data := range datas {
+		if arrays := GenerateMatrix(data.n); !arraysEqual(arrays, data.matrix, false) {
+			t.Errorf("generate_matrix error. data:%+v arrays:%+v", data, arrays)
+		}
+	}
+
+}

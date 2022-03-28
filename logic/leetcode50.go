@@ -319,3 +319,66 @@ func MergeInsertInterval(intervals [][]int, newInterval []int) [][]int {
 	arrays = append(arrays, intervals[right:]...)
 	return arrays
 }
+
+// leetcode 58: https://leetcode.com/problems/length-of-last-word/
+func LengthOfLastWord(s string) int {
+	left, right := 0, 0
+	for i := 0; i < len(s); i++ {
+		if s[i] == ' ' {
+			continue
+		}
+
+		if s[left] == ' ' || (i-1 >= 0 && s[i-1] == ' ') {
+			left = i
+		}
+		right = i
+	}
+
+	return right - left + 1
+}
+
+// leetcode 59: https://leetcode.com/problems/spiral-matrix-ii/
+func GenerateMatrix(n int) [][]int {
+	if n <= 0 {
+		return nil
+	}
+	matrix := make([][]int, 0)
+	for i := 0; i < n; i++ {
+		matrix = append(matrix, make([]int, n))
+	}
+
+	var seq int = 0
+	for i := 0; i <= n/2; i++ {
+		// 右
+		for row := i; row <= n-i-1; row++ {
+			seq = seq + 1
+			matrix[i][row] = seq
+		}
+		if seq == n*n {
+			break
+		}
+
+		// 下
+		for column := i + 1; column <= n-i-2; column++ {
+			seq = seq + 1
+			matrix[column][n-i-1] = seq
+		}
+
+		// 左
+		for row := n - i - 1; row >= i; row-- {
+			seq = seq + 1
+			matrix[n-i-1][row] = seq
+		}
+		if seq == n*n {
+			break
+		}
+
+		// 上
+		for column := n - i - 2; column > i; column-- {
+			seq = seq + 1
+			matrix[column][i] = seq
+		}
+	}
+
+	return matrix
+}
