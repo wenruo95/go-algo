@@ -284,3 +284,38 @@ func MergeIntervals(intervals [][]int) [][]int {
 
 	return lists
 }
+
+// leetcode 57: https://leetcode.com/problems/insert-interval/
+func MergeInsertInterval(intervals [][]int, newInterval []int) [][]int {
+	left, right := -1, -1
+	for index := 0; index < len(intervals); index++ {
+		if left == -1 && newInterval[0] <= intervals[index][1] {
+			left = index
+		}
+		if right == -1 && newInterval[1] < intervals[index][0] {
+			right = index
+		}
+	}
+	if left == -1 { // [0, len-1] [left...]
+		return append(intervals, newInterval)
+	}
+	if right == -1 {
+		right = len(intervals)
+	}
+
+	minLeft := intMin(intervals[left][0], newInterval[0]) // 左区间
+	maxRight := newInterval[1]
+	if right-1 >= 0 {
+		maxRight = intMax(intervals[right-1][1], newInterval[1]) // 右区间
+	}
+	if right+1 <= len(intervals)-1 && intervals[right+1][1] == maxRight { // 判断是否与后一个合并
+		right = right + 1
+		maxRight = intervals[right][1]
+	}
+
+	arrays := make([][]int, 0)
+	arrays = append(arrays, intervals[0:left]...)
+	arrays = append(arrays, []int{minLeft, maxRight})
+	arrays = append(arrays, intervals[right:]...)
+	return arrays
+}

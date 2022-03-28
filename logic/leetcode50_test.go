@@ -229,3 +229,68 @@ func TestMergeIntervals(t *testing.T) {
 	}
 
 }
+
+func TestMergeInsertInterval(t *testing.T) {
+	type testData struct {
+		intervals   [][]int
+		newInterval []int
+		arrays      [][]int
+	}
+
+	datas := []*testData{
+		{
+			intervals:   [][]int{{1, 3}, {6, 9}},
+			newInterval: []int{2, 5},
+			arrays:      [][]int{{1, 5}, {6, 9}},
+		},
+		{
+			intervals:   [][]int{{1, 2}, {3, 5}, {6, 7}, {8, 10}, {12, 16}},
+			newInterval: []int{4, 8},
+			arrays:      [][]int{{1, 2}, {3, 10}, {12, 16}},
+		},
+		{
+			intervals:   [][]int{{4, 6}, {7, 8}},
+			newInterval: []int{1, 3},
+			arrays:      [][]int{{1, 3}, {4, 6}, {7, 8}},
+		},
+		{
+			intervals:   [][]int{{4, 6}, {7, 8}},
+			newInterval: []int{9, 10},
+			arrays:      [][]int{{4, 6}, {7, 8}, {9, 10}},
+		},
+		{
+			intervals:   [][]int{{1, 5}},
+			newInterval: []int{2, 3},
+			arrays:      [][]int{{1, 5}},
+		},
+		{
+			intervals:   [][]int{{1, 5}},
+			newInterval: []int{5, 7},
+			arrays:      [][]int{{1, 7}},
+		},
+		{
+			intervals:   [][]int{{5, 7}},
+			newInterval: []int{1, 5},
+			arrays:      [][]int{{1, 7}},
+		},
+		{
+			intervals:   [][]int{{4, 6}, {7, 8}},
+			newInterval: []int{6, 7},
+			arrays:      [][]int{{4, 8}},
+		},
+		{
+			intervals:   [][]int{{4, 6}, {7, 8}, {10, 11}},
+			newInterval: []int{6, 7},
+			arrays:      [][]int{{4, 8}, {10, 11}},
+		},
+	}
+
+	for _, data := range datas {
+		arrays := MergeInsertInterval(data.intervals, data.newInterval)
+		if !arraysEqual(arrays, data.arrays, false) {
+			t.Errorf("merge_insert_intervals error. data:%+v arrays:%v", data, arrays)
+
+		}
+	}
+
+}
