@@ -45,3 +45,23 @@ func GetPermutation(n int, k int) string {
 
 	return s.String()
 }
+
+// leetcode 62: https://leetcode.com/problems/unique-paths/
+// 本质上为排列组合(m-1)个A和(n-1)个B
+func UniquePaths(m int, n int) int {
+
+	step := (m - 1) + (n - 1)
+	pivot := intMin(m-1, n-1)
+
+	var unique int = 1
+	var repeated int = 1
+	for i := 0; i < pivot; i++ {
+		unique = unique * (step - i)
+		repeated = repeated * (i + 1)
+		if unique%repeated == 0 {
+			unique = unique / repeated
+			repeated = 1
+		}
+	}
+	return unique / repeated
+}

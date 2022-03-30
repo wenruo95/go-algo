@@ -43,3 +43,29 @@ func TestGetPermutation(t *testing.T) {
 		}
 	}
 }
+
+func TestUniqPaths(t *testing.T) {
+	type testData struct {
+		m      int
+		n      int
+		result int
+	}
+
+	datas := []*testData{
+		{m: 1, n: 1, result: 1},
+		{m: 1, n: 2, result: 1},
+		{m: 3, n: 2, result: 3},
+		{m: 3, n: 7, result: 28},
+		{m: 23, n: 12, result: 193536720},
+		{m: 16, n: 16, result: 155117520},
+	}
+
+	for _, data := range datas {
+		if result := UniquePaths(data.m, data.n); result != data.result {
+			t.Errorf("unique_paths error. data:%+v result:%v", data, result)
+		}
+		if result := UniquePaths(data.n, data.m); result != data.result {
+			t.Errorf("unique_paths error. data:%+v result:%v", data, result)
+		}
+	}
+}
