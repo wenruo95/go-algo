@@ -65,3 +65,32 @@ func UniquePaths(m int, n int) int {
 	}
 	return unique / repeated
 }
+
+// leetcode 63: https://leetcode.com/problems/unique-paths-ii/
+func UniquePathsWithObstacles(obstacleGrid [][]int) int {
+	if len(obstacleGrid) == 0 || len(obstacleGrid[0]) == 0 {
+		return 0
+	}
+
+	var fn func(x, y int) int
+
+	row, column := len(obstacleGrid), len(obstacleGrid[0])
+	memo := make(map[int]int)
+	fn = func(x, y int) int {
+		if x >= row || y >= column || obstacleGrid[x][y] == 1 {
+			return 0
+		}
+		if x == row-1 && y == column-1 {
+			return 1
+		}
+		if v, exist := memo[x*column+y]; exist {
+			return v
+		}
+
+		count := fn(x+1, y) + fn(x, y+1)
+		memo[x*column+y] = count
+		return count
+	}
+
+	return fn(0, 0)
+}
