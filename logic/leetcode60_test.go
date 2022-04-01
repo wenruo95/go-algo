@@ -132,3 +132,85 @@ func TestUniqPathsWithObstacles(t *testing.T) {
 	}
 
 }
+
+func TestMiniPathSum(t *testing.T) {
+	type testData struct {
+		grid    [][]int
+		minimum int
+	}
+
+	datas := []*testData{
+		{
+			grid:    [][]int{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}},
+			minimum: 7,
+		},
+		{
+			grid:    [][]int{{1, 2, 3}, {4, 5, 6}},
+			minimum: 12,
+		},
+		{
+			grid:    [][]int{{1}},
+			minimum: 1,
+		},
+	}
+
+	for _, data := range datas {
+		if minimum := MinPathSum(data.grid); minimum != data.minimum {
+			t.Errorf("min_path_sum error. data:%+v minimum:%v", data, minimum)
+		}
+	}
+}
+
+func TestIsNumber(t *testing.T) {
+	type testData struct {
+		ss []string
+		b  bool
+	}
+
+	datas := []*testData{
+		{
+			ss: []string{"2",
+				"0",
+				"0089",
+				"-0.1",
+				"+3.14",
+				"4.",
+				"-.9",
+				".9",
+				"2e10",
+				"-90E3",
+				"3e+7",
+				"+6e-1",
+				"53.5e93",
+				"-123.456e789",
+				"46.e3",
+			},
+			b: true,
+		},
+		{
+			ss: []string{"abc",
+				"1a",
+				"1e",
+				"e3",
+				"99e2.5",
+				"--6",
+				"-+3",
+				"95a54e53",
+				"e",
+				".",
+				"4e+",
+				"+.",
+				".e1",
+			},
+			b: false,
+		},
+	}
+
+	for _, data := range datas {
+		for _, s := range data.ss {
+			if b := IsNumber(s); b != data.b {
+				t.Errorf("is_number error. s:%v b:%v data.b:%v", s, b, data.b)
+			}
+		}
+	}
+}

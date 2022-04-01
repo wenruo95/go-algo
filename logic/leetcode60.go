@@ -94,3 +94,92 @@ func UniquePathsWithObstacles(obstacleGrid [][]int) int {
 
 	return fn(0, 0)
 }
+
+// leetcode 64: https://leetcode.com/problems/minimum-path-sum/
+func MinPathSum(grid [][]int) int {
+	if len(grid) == 0 || len(grid[0]) == 0 {
+		return 0
+	}
+
+	var fn func(x, y int) int
+
+	memo := make(map[int]int)
+	row, column := len(grid), len(grid[0])
+	fn = func(x, y int) int {
+		if x >= row || y >= column {
+			return -1
+		}
+		if x == row-1 && y == column-1 {
+			return grid[x][y]
+		}
+
+		key := (x * column) + y
+		if v, exist := memo[key]; exist {
+			return v
+		}
+
+		right := fn(x, y+1) // 右
+		down := fn(x+1, y)  // 下
+
+		var sum int
+		if right == -1 || down == -1 {
+			sum = intMax(right, down) + grid[x][y]
+		} else {
+			sum = intMin(right, down) + grid[x][y]
+		}
+
+		memo[key] = sum
+		return sum
+	}
+
+	return fn(0, 0)
+}
+
+// leetcode 65: https://leetcode.com/problems/valid-number/
+func IsNumber(s string) bool {
+	// + -  第一位, 后面要接数字
+	// .	只能够出现一次 且在e之前,不能够单独出现
+	// e	前后均要接数字, 只能够出现一次
+	// 0 1 2 3 4 5 6 7 8 9
+
+	point, echar, number := -1, -1, 0
+	for i := 0; i < len(s); i++ {
+		switch s[i] {
+		case '+', '-':
+			if i == 0 {
+				continue
+			}
+			return false
+
+		case '.':
+			if point == -1 && echar == -1 {
+				point = i
+				continue
+			}
+			return false
+
+		case 'e', 'E':
+			if number == 0 {
+				return false
+			}
+			if echar == -1 && i-1 >= 0 && i+1 < len(s) {
+				echar = i
+
+				if (s[i+1] == '+' || s[i+1] == '-') && i+2 < len(s) {
+					i = i + 1
+				}
+				continue
+			}
+			return false
+
+		default:
+			if s[i] >= '0' && s[i] <= '9' {
+				number = number + 1
+				continue
+			}
+			return false
+		}
+	}
+
+	return number > 0
+}
