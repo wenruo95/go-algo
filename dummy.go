@@ -4,7 +4,7 @@
 *   file : dummy.go
 *   coder: zemanzeng
 *   date : 2022-03-14 10:01:23
-*   desc : dummp go build check grammar
+*   desc : dummy: compile check
 *
 ================================================================*/
 
