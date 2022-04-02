@@ -214,3 +214,69 @@ func TestIsNumber(t *testing.T) {
 		}
 	}
 }
+
+func TestPlusOne(t *testing.T) {
+	type testData struct {
+		digits []int
+		result []int
+	}
+
+	datas := []*testData{
+		{
+			digits: []int{1, 2, 3},
+			result: []int{1, 2, 4},
+		},
+		{
+			digits: []int{4, 3, 2, 1},
+			result: []int{4, 3, 2, 2},
+		},
+		{
+			digits: []int{9},
+			result: []int{1, 0},
+		},
+		{
+			digits: []int{9, 9, 9},
+			result: []int{1, 0, 0, 0},
+		},
+	}
+
+	for _, data := range datas {
+		if result := PlusOne(data.digits); !intListEqual(result, data.result) {
+			t.Errorf("plus_one error. data:%+v result:%v", data, result)
+		}
+	}
+
+}
+
+func TestAddBinary(t *testing.T) {
+	type testData struct {
+		a   string
+		b   string
+		sum string
+	}
+
+	datas := []*testData{
+		{
+			a:   "11",
+			b:   "1",
+			sum: "100",
+		},
+		{
+			a:   "1010",
+			b:   "1011",
+			sum: "10101",
+		},
+		{
+			a:   "1",
+			b:   "1",
+			sum: "10",
+		},
+	}
+
+	for _, data := range datas {
+		if sum := AddBinary(data.a, data.b); sum != data.sum {
+			t.Errorf("add_binary error. data:%+v sum:%v", data, sum)
+		}
+	}
+
+}

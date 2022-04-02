@@ -183,3 +183,52 @@ func IsNumber(s string) bool {
 
 	return number > 0
 }
+
+// leetcode 66: https://leetcode.com/problems/plus-one/
+func PlusOne(digits []int) []int {
+	var higher int = 1
+	for i := len(digits) - 1; i >= 0; i-- {
+		if higher == 0 {
+			break
+		}
+		sum := higher + digits[i]
+		higher = sum / 10
+		digits[i] = sum % 10
+	}
+
+	if higher > 0 {
+		return append([]int{higher}, digits...)
+	}
+	return digits
+}
+
+// leetcode 67: https://leetcode.com/problems/add-binary/
+func AddBinary(a string, b string) string {
+	result := make([]byte, 1+intMax(len(a), len(b)))
+	i, j, k := len(a)-1, len(b)-1, len(result)-1
+
+	var higher byte
+	for (i >= 0 && j >= 0) || higher > 0 {
+		sum := higher
+		if i >= 0 {
+			sum = sum + a[i] - '0'
+		}
+		if j >= 0 {
+			sum = sum + b[j] - '0'
+		}
+		higher = sum / 2
+		result[k] = sum%2 + '0'
+
+		i = i - 1
+		j = j - 1
+		k = k - 1
+	}
+
+	if i >= 0 {
+		return a[0:i+1] + string(result[k+1:])
+	}
+	if j >= 0 {
+		return b[0:j+1] + string(result[k+1:])
+	}
+	return string(result[k+1:])
+}
