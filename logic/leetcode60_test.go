@@ -330,3 +330,60 @@ func TestFullJustify(t *testing.T) {
 		}
 	}
 }
+
+func TestMySqrt(t *testing.T) {
+	type testData struct {
+		x      int
+		result int
+	}
+
+	datas := []*testData{
+		{
+			x:      2,
+			result: 1,
+		},
+		{
+			x:      3,
+			result: 1,
+		},
+		{
+			x:      4,
+			result: 2,
+		},
+		{
+			x:      5,
+			result: 2,
+		},
+		{
+			x:      6,
+			result: 2,
+		},
+		{
+			x:      7,
+			result: 2,
+		},
+		{
+			x:      8,
+			result: 2,
+		},
+		{
+			x:      9,
+			result: 3,
+		},
+		{
+			x:      10,
+			result: 3,
+		},
+		{
+			x:      16,
+			result: 4,
+		},
+	}
+
+	for _, data := range datas {
+		if result := MySqrt(data.x); result != data.result {
+			t.Errorf("my_sqrt error. data:%+v result:%v", data, result)
+		}
+	}
+
+}

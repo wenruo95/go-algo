@@ -281,3 +281,30 @@ func FullJustify(words []string, maxWidth int) []string {
 
 	return list
 }
+
+// leetcode 69: https://leetcode.com/problems/sqrtx/
+func MySqrt(x int) int {
+	if x <= 1 {
+		return x
+	}
+
+	low, high := 1, x
+	for low < high {
+		mid := low + (high-low)/2
+
+		result := x / mid
+		if result == mid {
+			return mid
+		}
+		if result > mid {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+
+	if low <= x/low {
+		return low
+	}
+	return low - 1
+}
