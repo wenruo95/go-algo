@@ -232,3 +232,52 @@ func AddBinary(a string, b string) string {
 	}
 	return string(result[k+1:])
 }
+
+// leetcode 68: https://leetcode.com/problems/text-justification/
+func FullJustify(words []string, maxWidth int) []string {
+	list := make([]string, 0)
+
+	var start, sum int
+	for i := 0; i < len(words); i++ {
+		width := sum + i - start + len(words[i])
+		if width >= maxWidth {
+			list = append(list, strings.Join(words[start:i+1], " "))
+			start, sum = i+1, 0
+			continue
+		}
+
+		sum = sum + len(words[i])
+		if i+1 < len(words) && width+1+len(words[i+1]) <= maxWidth {
+			continue
+		}
+
+		if i == start || i == len(words)-1 {
+			list = append(list, strings.Join(words[start:i+1], " ")+
+				strings.Repeat(" ", maxWidth-width))
+			start, sum = i+1, 0
+			continue
+		}
+
+		space := maxWidth - sum
+		avg := space / (i - start)
+		left := space - (i-start)*avg
+		holder := strings.Repeat(" ", avg)
+
+		b := &strings.Builder{}
+		b.Grow(maxWidth)
+		for j := start; j < i; j++ {
+			b.WriteString(words[j] + holder)
+
+			if left > 0 {
+				left = left - 1
+				b.WriteString(" ")
+			}
+		}
+		b.WriteString(words[i])
+
+		list = append(list, b.String())
+		start, sum = i+1, 0
+	}
+
+	return list
+}

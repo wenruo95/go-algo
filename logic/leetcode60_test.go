@@ -10,7 +10,10 @@
 
 package logic
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestGetPermutation(t *testing.T) {
 	type testData struct {
@@ -279,4 +282,51 @@ func TestAddBinary(t *testing.T) {
 		}
 	}
 
+}
+
+func TestFullJustify(t *testing.T) {
+	type testData struct {
+		words    []string
+		maxWidth int
+		result   []string
+	}
+
+	datas := []*testData{
+		{
+			words:    []string{"This", "is", "an", "example", "of", "text", "justification."},
+			maxWidth: 16,
+			result: []string{
+				"This    is    an",
+				"example  of text",
+				"justification.  ",
+			},
+		},
+		{
+			words:    []string{"What", "must", "be", "acknowledgment", "shall", "be"},
+			maxWidth: 16,
+			result: []string{
+				"What   must   be",
+				"acknowledgment  ",
+				"shall be        ",
+			},
+		},
+		{
+			words:    []string{"Science", "is", "what", "we", "understand", "well", "enough", "to", "explain", "to", "a", "computer.", "Art", "is", "everything", "else", "we", "do"},
+			maxWidth: 20,
+			result: []string{
+				"Science  is  what we",
+				"understand      well",
+				"enough to explain to",
+				"a  computer.  Art is",
+				"everything  else  we",
+				"do                  ",
+			},
+		},
+	}
+
+	for _, data := range datas {
+		if result := FullJustify(data.words, data.maxWidth); !stringListEqual(result, data.result) {
+			t.Errorf("full_justify error. data:\n%+v\nresult:\n%+v", strings.Join(data.result, "\n"), strings.Join(result, "\n"))
+		}
+	}
 }
