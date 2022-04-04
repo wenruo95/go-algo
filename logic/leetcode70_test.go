@@ -10,7 +10,9 @@
 
 package logic
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestClimbStairs(t *testing.T) {
 	type testData struct {
@@ -33,4 +35,45 @@ func TestClimbStairs(t *testing.T) {
 			t.Errorf("climb_stairs error. data:%+v step:%v", data, step)
 		}
 	}
+}
+
+func TestSimplifyPath(t *testing.T) {
+	type testData struct {
+		path   string
+		result string
+	}
+
+	datas := []*testData{
+		{
+			path:   "/home/",
+			result: "/home",
+		},
+		{
+			path:   "/../",
+			result: "/",
+		},
+		{
+			path:   "/home//foo/",
+			result: "/home/foo",
+		},
+		{
+			path:   "/a/./b/../../c/",
+			result: "/c",
+		},
+		{
+			path:   "/a//b////c/d//././/..",
+			result: "/a/b/c",
+		},
+		{
+			path:   "/.././GVzvE/./xBjU///../..///././//////T/../../.././zu/q/e",
+			result: "/zu/q/e",
+		},
+	}
+
+	for _, data := range datas {
+		if result := SimplifyPath(data.path); result != data.result {
+			t.Errorf("simplify_path error. data:%+v result:%v", data, result)
+		}
+	}
+
 }
