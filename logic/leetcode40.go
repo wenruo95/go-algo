@@ -131,17 +131,10 @@ func Trap(height []int) int {
 	var sum int
 	for i := 0; i < len(height); i++ {
 		if left[i] > height[i] && right[i] > height[i] {
-			sum = sum + minInt(left[i]-height[i], right[i]-height[i])
+			sum = sum + intMin(left[i]-height[i], right[i]-height[i])
 		}
 	}
 	return sum
-}
-
-func minInt(a, b int) int {
-	if a > b {
-		return b
-	}
-	return a
 }
 
 // leetcode 43: https://leetcode.com/problems/multiply-strings/

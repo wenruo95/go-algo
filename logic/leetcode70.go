@@ -11,6 +11,7 @@
 package logic
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -79,4 +80,130 @@ func SimplifyPath(path string) string {
 		return "/"
 	}
 	return s.String()
+}
+
+// leetcode 72: https://leetcode.com/problems/edit-distance/
+// insert replace delete
+func MinDistance(word1 string, word2 string) int {
+	memo := make(map[string]int)
+
+	var fn func(i1, i2 int) int
+	fn = func(i1, i2 int) int {
+		if i2 == len(word2) {
+			return len(word1) - i1 // delete
+		}
+		if i1 == len(word1) {
+			return len(word2) - i2 // insert
+		}
+
+		key := strconv.Itoa(i1) + "_" + strconv.Itoa(i2)
+		if v, exist := memo[key]; exist {
+			return v
+		}
+
+		dist1 := fn(i1, i2+1) + 1   // insert
+		dist2 := fn(i1+1, i2) + 1   // delete
+		dist3 := fn(i1+1, i2+1) + 1 // replace
+
+		minDist := intMin(intMin(dist1, dist2), dist3)
+		if word1[i1] == word2[i2] {
+			minDist = intMin(minDist, fn(i1+1, i2+1))
+		}
+
+		memo[key] = minDist
+		return minDist
+	}
+
+	return fn(0, 0)
+}
+
+// leetcode 72: https://leetcode.com/problems/set-matrix-zeroes/
+func SetMatrixZeroes(matrix [][]int) {
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return
+	}
+
+	row, column := len(matrix), len(matrix[0])
+	rowWhite := make(map[int]struct{})
+	columnWhite := make(map[int]struct{})
+
+	for i := 0; i < row; i++ {
+		if len(rowWhite) == row || len(columnWhite) == column {
+			break
+		}
+		for j := 0; j < column; j++ {
+			if len(columnWhite) == column {
+				break
+			}
+			if matrix[i][j] == 0 {
+				rowWhite[i] = struct{}{}
+				columnWhite[j] = struct{}{}
+			}
+		}
+	}
+
+	for i := 0; i < row; i++ {
+		if _, exist := rowWhite[i]; !exist {
+			continue
+		}
+		for j := 0; j < column; j++ {
+			matrix[i][j] = 0
+		}
+	}
+	for i := 0; i < column; i++ {
+		if _, exist := columnWhite[i]; !exist {
+			continue
+		}
+		for j := 0; j < row; j++ {
+			matrix[j][i] = 0
+		}
+	}
+}
+
+// leetcode 73: https://leetcode.com/problems/search-a-2d-matrix/
+func SearchMatrix(matrix [][]int, target int) bool {
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return false
+	}
+
+	row, column := len(matrix), len(matrix[0])
+	if target < matrix[0][0] || target > matrix[row-1][column-1] {
+		return false
+	}
+
+	var x int = -1
+
+	low, high := 0, row-1
+	for low < high {
+		mid := (low + high) / 2
+		if matrix[mid][0] <= target && target <= matrix[mid][column-1] {
+			x = mid
+			break
+		}
+		if target > matrix[mid][0] {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+	if matrix[low][0] <= target && target <= matrix[low][column-1] {
+		x = low
+	}
+	if x == -1 {
+		return false
+	}
+
+	low, high = 0, column-1
+	for low < high {
+		mid := (low + high) / 2
+		if target == matrix[x][mid] {
+			return true
+		}
+		if target > matrix[x][mid] {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+	return matrix[x][low] == target
 }

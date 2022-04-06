@@ -77,3 +77,87 @@ func TestSimplifyPath(t *testing.T) {
 	}
 
 }
+
+func TestMinDistance(t *testing.T) {
+	type testData struct {
+		word1    string
+		word2    string
+		distance int
+	}
+
+	datas := []*testData{
+		{
+			word1:    "horse",
+			word2:    "ros",
+			distance: 3,
+		},
+		{
+			word1:    "intention",
+			word2:    "execution",
+			distance: 5,
+		},
+	}
+
+	for _, data := range datas {
+		if distance := MinDistance(data.word1, data.word2); distance != data.distance {
+			t.Errorf("min_distance error. data:%+v distance:%v", data, distance)
+		}
+	}
+}
+
+func TestSetMatrixZeroes(t *testing.T) {
+	type testData struct {
+		matrix [][]int
+		arrays [][]int
+	}
+
+	datas := []*testData{
+		{
+			matrix: [][]int{{1, 1, 1}, {1, 0, 1}, {1, 1, 1}},
+			arrays: [][]int{{1, 0, 1}, {0, 0, 0}, {1, 0, 1}},
+		},
+		{
+			matrix: [][]int{{0, 1, 2, 0}, {3, 4, 5, 2}, {1, 3, 1, 5}},
+			arrays: [][]int{{0, 0, 0, 0}, {0, 4, 5, 0}, {0, 3, 1, 0}},
+		},
+	}
+
+	for _, data := range datas {
+		SetMatrixZeroes(data.matrix)
+		if !arraysEqual(data.matrix, data.arrays, false) {
+			t.Errorf("set_matrix_zeroes error. matrix:%+v arrays:%+v", data.matrix, data.arrays)
+		}
+	}
+
+}
+
+func TestSearchMatrix(t *testing.T) {
+	type testData struct {
+		matrix  [][]int
+		targets []int
+		find    bool
+	}
+
+	datas := []*testData{
+		{
+			matrix:  [][]int{{1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 60}},
+			targets: []int{1, 3, 5, 7, 10, 11, 16, 20, 23, 30, 34, 60},
+			find:    true,
+		},
+
+		{
+			matrix:  [][]int{{1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 60}},
+			targets: []int{2, 4, 6, 8, 9, 12, 13, 14, 15, 17, 18, 19, 21, 22, 25, 26, 27, 28, 29, 31, 32, 33, 35},
+			find:    false,
+		},
+	}
+
+	for _, data := range datas {
+		for _, target := range data.targets {
+			if find := SearchMatrix(data.matrix, target); find != data.find {
+				t.Errorf("search_matrix error. data:%+v target:%v find:%v expect:%v", data.matrix, target, find, data.find)
+			}
+		}
+
+	}
+}
