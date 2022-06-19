@@ -117,7 +117,7 @@ func MinDistance(word1 string, word2 string) int {
 	return fn(0, 0)
 }
 
-// leetcode 72: https://leetcode.com/problems/set-matrix-zeroes/
+// leetcode 73: https://leetcode.com/problems/set-matrix-zeroes/
 func SetMatrixZeroes(matrix [][]int) {
 	if len(matrix) == 0 || len(matrix[0]) == 0 {
 		return
@@ -160,7 +160,7 @@ func SetMatrixZeroes(matrix [][]int) {
 	}
 }
 
-// leetcode 73: https://leetcode.com/problems/search-a-2d-matrix/
+// leetcode 74: https://leetcode.com/problems/search-a-2d-matrix/
 func SearchMatrix(matrix [][]int, target int) bool {
 	if len(matrix) == 0 || len(matrix[0]) == 0 {
 		return false
@@ -206,4 +206,86 @@ func SearchMatrix(matrix [][]int, target int) bool {
 		}
 	}
 	return matrix[x][low] == target
+}
+
+// leetcode 75: https://leetcode.com/problems/sort-colors/
+func SortColors(nums []int) {
+	var red, white, blue int
+	for i := 0; i < len(nums); i++ {
+		switch nums[i] {
+		case 0:
+			red = red + 1
+		case 1:
+			white = white + 1
+		case 2:
+			blue = blue + 1
+		default:
+		}
+	}
+
+	for i := 0; i < red; i++ {
+		nums[i] = 0
+	}
+	for i := red; i < white+red; i++ {
+		nums[i] = 1
+	}
+	for i := white + red; i < len(nums); i++ {
+		nums[i] = 2
+	}
+}
+
+// leetcode 76: https://leetcode.com/problems/minimum-window-substring/
+func MinWindow(s string, t string) string {
+	getIndex := func(c byte) byte {
+		var index byte
+		if c >= 'a' {
+			index = byte(c-'a') + 26
+		} else {
+			index = byte(c - 'A')
+		}
+		return index
+	}
+
+	set := make(map[byte]struct{})
+
+	var arr [52]int
+	for i := 0; i < len(t); i++ {
+		index := getIndex(t[i])
+		set[index] = struct{}{}
+		arr[index] = arr[index] + 1
+	}
+
+	var low, high int
+	for i := 0; i < len(s); i++ {
+		if len(s)-i < len(t) {
+			break
+		}
+		if _, exist := set[getIndex(s[i])]; !exist {
+			continue
+		}
+
+		var hi int
+		var arr2 [52]int
+		for j := i; j < len(s); j++ {
+			index := getIndex(s[j])
+			if _, exist := set[index]; !exist {
+				continue
+			}
+			if arr2[index] < arr[index] {
+				arr2[index] = arr2[index] + 1
+			}
+
+			if arr2 == arr {
+				hi = j + 1
+				break
+			}
+		}
+
+		l1, l2 := hi-i, high-low
+		if (l1 > 0) && (l2 == 0 || l1 < l2) {
+			low, high = i, hi
+		}
+	}
+
+	return s[low:high]
 }

@@ -161,3 +161,50 @@ func TestSearchMatrix(t *testing.T) {
 
 	}
 }
+
+func TestSortColors(t *testing.T) {
+	type testData struct {
+		nums  []int
+		array []int
+	}
+
+	datas := []*testData{
+		{
+			nums:  []int{2, 0, 2, 1, 1, 0},
+			array: []int{0, 0, 1, 1, 2, 2},
+		},
+		{
+			nums:  []int{2, 0, 1},
+			array: []int{0, 1, 2},
+		},
+	}
+
+	for _, data := range datas {
+		if SortColors(data.nums); !intListEqual(data.nums, data.array) {
+			t.Errorf("sort_colors error. data:%+v", data)
+		}
+	}
+
+}
+
+func TestMinWindow(t *testing.T) {
+	type testData struct {
+		s      string
+		t      string
+		window string
+	}
+
+	datas := []*testData{
+		{s: "ADOBECODEBANC", t: "ABC", window: "BANC"},
+		{s: "a", t: "a", window: "a"},
+		{s: "a", t: "aa", window: ""},
+		{s: "aaaaaaaaaaaabbbbbcdd", t: "abcdd", window: "abbbbbcdd"},
+	}
+
+	for _, data := range datas {
+		if window := MinWindow(data.s, data.t); window != data.window {
+			t.Errorf("min_window error. data:%+v window:%v", data, window)
+		}
+	}
+
+}
