@@ -11,6 +11,7 @@
 package logic
 
 import (
+	"encoding/json"
 	"sort"
 	"strconv"
 	"strings"
@@ -155,4 +156,38 @@ func arrays2str(arrays [][]int) string {
 		s = s + "\n"
 	}
 	return s
+}
+
+func minInt(list ...int) int {
+	if len(list) == 0 {
+		return 0
+	}
+	var min int = list[0]
+	for i := 1; i < len(list); i++ {
+		if min > list[i] {
+			min = list[i]
+		}
+	}
+	return min
+}
+
+func maxInt(list ...int) int {
+	if len(list) == 0 {
+		return 0
+	}
+	var max int = list[0]
+	for i := 1; i < len(list); i++ {
+		if max < list[i] {
+			max = list[i]
+		}
+	}
+	return max
+}
+
+func jsonstr(i interface{}) string {
+	buff, err := json.Marshal(i)
+	if err != nil {
+		return ""
+	}
+	return string(buff)
 }

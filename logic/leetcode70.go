@@ -289,3 +289,80 @@ func MinWindow(s string, t string) string {
 
 	return s[low:high]
 }
+
+func MinWindow2(s string, t string) string {
+	if len(s) < len(t) {
+		return ""
+	}
+
+	// 1. pre for t
+	tvCount := make(map[byte]int)
+	for index := 0; index < len(t); index++ {
+		if v, exist := tvCount[t[index]]; exist {
+			tvCount[t[index]] = v + 1
+		} else {
+			tvCount[t[index]] = 1
+		}
+	}
+
+	// 2. pre for s
+	svIndex := make(map[byte][]int)
+	for index := 0; index < len(s); index++ {
+		if v, exist := svIndex[s[index]]; exist {
+			svIndex[s[index]] = append(v, index)
+		} else {
+			svIndex[s[index]] = []int{index}
+		}
+	}
+
+	// 3. match check
+	for k, count := range tvCount {
+		if len(svIndex[k]) < count {
+			return ""
+		}
+	}
+
+	// 4. find min windows
+	var low, length int = 0, len(s)
+	for k, indexs := range svIndex {
+		if tvCount[k] == 0 {
+			continue
+		}
+
+		for j := 0; j <= len(indexs)-tvCount[k]; j++ {
+
+			// alpham has enough count
+			var right int = indexs[j]
+			var invalid bool
+			for k2, indexs2 := range svIndex {
+				if tvCount[k2] == 0 {
+					continue
+				}
+
+				var i int
+				for i = 0; i < len(indexs2) && indexs2[i] < indexs[j]; i++ {
+				}
+				i = i + tvCount[k2] - 1
+				if i >= len(indexs2) {
+					invalid = true
+					break
+				}
+
+				right = intMax(right, indexs2[i])
+			}
+
+			if invalid {
+				break
+			}
+
+			if length > right-indexs[j]+1 {
+				low = indexs[j]
+				length = right - indexs[j] + 1
+			}
+
+		}
+
+	}
+
+	return s[low : low+length]
+}
