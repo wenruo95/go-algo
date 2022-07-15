@@ -308,6 +308,9 @@ func MinWindow2(s string, t string) string {
 	// 2. pre for s
 	svIndex := make(map[byte][]int)
 	for index := 0; index < len(s); index++ {
+		if tvCount[s[index]] == 0 {
+			continue
+		}
 		if v, exist := svIndex[s[index]]; exist {
 			svIndex[s[index]] = append(v, index)
 		} else {
@@ -365,4 +368,58 @@ func MinWindow2(s string, t string) string {
 	}
 
 	return s[low : low+length]
+}
+
+func MinWindow3(s string, t string) string {
+	getIndex := func(c byte) byte {
+		var index byte
+		if c >= 'a' {
+			index = byte(c-'a') + 26
+		} else {
+			index = byte(c - 'A')
+		}
+		return index
+	}
+
+	var arr [52]int
+	for _, c := range t {
+		ci := getIndex(byte(c))
+		arr[ci] = arr[ci] + 1
+	}
+
+	var arr2 [52]int // for real caculate
+	var arr3 [52]int // for compare
+	var start, length int = 0, len(s) + 100
+
+	var left, right int
+	for right < len(s) {
+		ci := getIndex(s[right])
+		right = right + 1
+		if arr[ci] > 0 {
+			arr2[ci] = arr2[ci] + 1
+			arr3[ci] = intMin(arr2[ci], arr[ci])
+		}
+
+		for arr == arr3 {
+			if right-left < length {
+				start = left
+				length = right - left
+			}
+
+			li := getIndex(s[left])
+			left = left + 1
+
+			if arr[li] > 0 {
+				arr2[li] = arr2[li] - 1
+				arr3[li] = intMin(arr2[li], arr[li])
+			}
+
+		}
+
+	}
+
+	if length > len(s) {
+		return ""
+	}
+	return s[start : start+length]
 }

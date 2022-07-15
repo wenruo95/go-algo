@@ -210,6 +210,10 @@ func TestMinWindow(t *testing.T) {
 		if window := MinWindow2(data.s, data.t); window != data.window {
 			t.Errorf("min_window2 error. data:%+v window:%v", data, window)
 		}
+		if window := MinWindow3(data.s, data.t); window != data.window {
+			t.Errorf("min_window3 error. data:%+v window:%v", data, window)
+		}
+
 	}
 
 }
