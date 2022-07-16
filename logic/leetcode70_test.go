@@ -217,3 +217,59 @@ func TestMinWindow(t *testing.T) {
 	}
 
 }
+
+func TestCombinations(t *testing.T) {
+
+	type testData struct {
+		n   int
+		k   int
+		arr [][]int
+	}
+	datas := []*testData{
+		{
+			n: 4,
+			k: 2,
+			arr: [][]int{
+				{2, 4},
+				{3, 4},
+				{2, 3},
+				{1, 2},
+				{1, 3},
+				{1, 4},
+			},
+		},
+		{
+			n: 1,
+			k: 1,
+			arr: [][]int{
+				{1},
+			},
+		},
+		{
+			n: 3,
+			k: 3,
+			arr: [][]int{
+				{1, 2, 3},
+			},
+		},
+		{
+			n: 4,
+			k: 3,
+			arr: [][]int{
+				{1, 2, 3},
+				{1, 2, 4},
+				{1, 3, 4},
+				{2, 3, 4},
+			},
+		},
+	}
+
+	for _, data := range datas {
+		arr := Combinations(data.n, data.k)
+		if !arraysEqual(arr, data.arr, true) {
+			t.Errorf("array not equal. n:%v k:%v arr:%+v expect:%v", data.n, data.k, jsonstr(arr), jsonstr(data.arr))
+		}
+
+	}
+
+}

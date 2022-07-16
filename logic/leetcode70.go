@@ -423,3 +423,44 @@ func MinWindow3(s string, t string) string {
 	}
 	return s[start : start+length]
 }
+
+// leetcode 77: https://leetcode.com/problems/combinations/
+func Combinations(n int, k int) [][]int {
+	if k <= 0 || k > n {
+		return [][]int{}
+	}
+
+	numbers := make([]int, 0)
+	for number := 1; number <= n; number++ {
+		numbers = append(numbers, number)
+	}
+
+	memo := make(map[string][][]int)
+	var combinationsByArr func([]int, int, int) [][]int
+	combinationsByArr = func(numbers []int, index, k int) [][]int {
+		key := strconv.Itoa(index) + "_" + strconv.Itoa(k)
+		if v, exist := memo[key]; exist {
+			return v
+		}
+
+		result := make([][]int, 0)
+		for i := index; i < len(numbers); i++ {
+			if k == 1 {
+				result = append(result, []int{numbers[i]})
+				continue
+			}
+
+			arr := combinationsByArr(numbers, i+1, k-1)
+			for _, list := range arr {
+				if numbers[i] >= list[0] {
+					continue
+				}
+				result = append(result, append([]int{numbers[i]}, list...))
+			}
+		}
+		memo[key] = result
+		return result
+	}
+
+	return combinationsByArr(numbers, 0, k)
+}
