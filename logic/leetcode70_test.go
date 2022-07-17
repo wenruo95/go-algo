@@ -273,3 +273,116 @@ func TestCombinations(t *testing.T) {
 	}
 
 }
+
+func TestSubSets(t *testing.T) {
+
+	type testData struct {
+		nums []int
+		arr  [][]int
+	}
+	datas := []*testData{
+		{
+			nums: []int{1, 2, 3},
+			arr: [][]int{
+				{},
+				{1},
+				{2},
+				{3},
+				{1, 2},
+				{1, 3},
+				{2, 3},
+				{1, 2, 3},
+			},
+		},
+		{
+			nums: []int{0},
+			arr: [][]int{
+				{},
+				{0},
+			},
+		},
+		{
+			nums: []int{4, 1, 0},
+			arr: [][]int{
+				{},
+				{4},
+				{1},
+				{0},
+				{1, 4},
+				{0, 4},
+				{0, 1},
+				{0, 1, 4},
+			},
+		},
+	}
+
+	for _, data := range datas {
+		arr := Subsets(data.nums)
+		if !arraysEqual(arr, data.arr, true) {
+			t.Errorf("array not equal. nums:%v arr:%+v expect:%v", jsonstr(data.nums), jsonstr(arr), jsonstr(data.arr))
+		}
+	}
+
+}
+
+func TestWordSearchExist(t *testing.T) {
+	type testData struct {
+		board [][]byte
+		word  string
+		exist bool
+	}
+
+	datas := []*testData{
+		{
+			board: [][]byte{
+				{'A', 'B', 'C', 'E'},
+				{'S', 'F', 'C', 'S'},
+				{'A', 'D', 'E', 'E'},
+			},
+			word:  "ABCCED",
+			exist: true,
+		},
+		{
+			board: [][]byte{
+				{'A', 'B', 'C', 'E'},
+				{'S', 'F', 'C', 'S'},
+				{'A', 'D', 'E', 'E'},
+			},
+			word:  "SEE",
+			exist: true,
+		},
+		{
+			board: [][]byte{
+				{'A', 'B', 'C', 'E'},
+				{'S', 'F', 'C', 'S'},
+				{'A', 'D', 'E', 'E'},
+			},
+			word:  "ABCB",
+			exist: false,
+		},
+		{
+			board: [][]byte{
+				{'a', 'a'},
+			},
+			word:  "aaa",
+			exist: false,
+		},
+		{
+			board: [][]byte{
+				{'A', 'B', 'C', 'E'},
+				{'S', 'F', 'E', 'S'},
+				{'A', 'D', 'E', 'E'},
+			},
+			word:  "ABCESEEEFS",
+			exist: true,
+		},
+	}
+
+	for _, data := range datas {
+		if exist := WordSearchExist(data.board, data.word); exist != data.exist {
+			t.Errorf("word_search_exist error. board:%v word:%v exist:%v expect:%v",
+				byteArr2Str(data.board), data.word, data.exist, exist)
+		}
+	}
+
+}

@@ -191,3 +191,11 @@ func jsonstr(i interface{}) string {
 	}
 	return string(buff)
 }
+
+func byteArr2Str(arr [][]byte) string {
+	l := make([]string, 0)
+	for _, b := range arr {
+		l = append(l, string(b))
+	}
+	return strings.Join(l, ",")
+}

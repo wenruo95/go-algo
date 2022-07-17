@@ -464,3 +464,86 @@ func Combinations(n int, k int) [][]int {
 
 	return combinationsByArr(numbers, 0, k)
 }
+
+// leetcode 78: https://leetcode.com/problems/subsets/
+func Subsets(nums []int) [][]int {
+	memo := make(map[string][][]int)
+	var combinationsByArr func([]int, int, int) [][]int
+	combinationsByArr = func(numbers []int, index, k int) [][]int {
+		key := strconv.Itoa(index) + "_" + strconv.Itoa(k)
+		if v, exist := memo[key]; exist {
+			return v
+		}
+
+		result := make([][]int, 0)
+		for i := index; i < len(numbers); i++ {
+			if k == 1 {
+				result = append(result, []int{numbers[i]})
+				continue
+			}
+
+			arr := combinationsByArr(numbers, i+1, k-1)
+			for _, list := range arr {
+				result = append(result, append([]int{numbers[i]}, list...))
+			}
+		}
+		memo[key] = result
+		return result
+	}
+
+	list := make([][]int, 0)
+	list = append(list, []int{})
+	for k := 1; k <= len(nums); k++ {
+		list = append(list, combinationsByArr(nums, 0, k)...)
+	}
+	return list
+}
+
+// leetcode 79: https://leetcode.com/problems/word-search/
+func WordSearchExist(board [][]byte, word string) bool {
+
+	var exist func(row, column int, index int, visited map[string]struct{}) bool
+
+	exist = func(row, column int, index int, visited map[string]struct{}) bool {
+		if row < 0 || row >= len(board) || column < 0 || column >= len(board[0]) ||
+			index >= len(word) || board[row][column] != word[index] {
+			return false
+		}
+
+		key := strconv.Itoa(row) + "_" + strconv.Itoa(column)
+		if _, exist := visited[key]; exist {
+			return false
+		}
+
+		if index == len(word)-1 {
+			return true
+		}
+
+		var (
+			arr = [][]int{
+				{row - 1, column},
+				{row + 1, column},
+				{row, column - 1},
+				{row, column + 1},
+			}
+		)
+		for _, list := range arr {
+			visited[key] = struct{}{}
+			if exist(list[0], list[1], index+1, visited) {
+				return true
+			}
+			delete(visited, key)
+		}
+		return false
+	}
+
+	for row := 0; row < len(board); row++ {
+		for column := 0; column < len(board[0]); column++ {
+			visited := make(map[string]struct{}) // key: $row_$column
+			if exist(row, column, 0, visited) {
+				return true
+			}
+		}
+	}
+	return false
+}
