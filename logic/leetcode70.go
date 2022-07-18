@@ -501,17 +501,13 @@ func Subsets(nums []int) [][]int {
 
 // leetcode 79: https://leetcode.com/problems/word-search/
 func WordSearchExist(board [][]byte, word string) bool {
+	var (
+		exist func(row, column int, index int) bool
+	)
 
-	var exist func(row, column int, index int, visited map[string]struct{}) bool
-
-	exist = func(row, column int, index int, visited map[string]struct{}) bool {
+	exist = func(row, column int, index int) bool {
 		if row < 0 || row >= len(board) || column < 0 || column >= len(board[0]) ||
 			index >= len(word) || board[row][column] != word[index] {
-			return false
-		}
-
-		key := strconv.Itoa(row) + "_" + strconv.Itoa(column)
-		if _, exist := visited[key]; exist {
 			return false
 		}
 
@@ -519,28 +515,20 @@ func WordSearchExist(board [][]byte, word string) bool {
 			return true
 		}
 
-		var (
-			arr = [][]int{
-				{row - 1, column},
-				{row + 1, column},
-				{row, column - 1},
-				{row, column + 1},
-			}
-		)
-		for _, list := range arr {
-			visited[key] = struct{}{}
-			if exist(list[0], list[1], index+1, visited) {
-				return true
-			}
-			delete(visited, key)
-		}
-		return false
+		tmp := board[row][column]
+		board[row][column] = '.'
+		b := exist(row-1, column, index+1) ||
+			exist(row+1, column, index+1) ||
+			exist(row, column-1, index+1) ||
+			exist(row, column+1, index+1)
+		board[row][column] = tmp
+
+		return b
 	}
 
 	for row := 0; row < len(board); row++ {
 		for column := 0; column < len(board[0]); column++ {
-			visited := make(map[string]struct{}) // key: $row_$column
-			if exist(row, column, 0, visited) {
+			if exist(row, column, 0) {
 				return true
 			}
 		}
