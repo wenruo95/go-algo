@@ -626,3 +626,41 @@ func TestRotateRight(t *testing.T) {
 		}
 	}
 }
+
+func TestDeleteDumplicates2(t *testing.T) {
+
+	type testData struct {
+		list   []interface{}
+		result []interface{}
+	}
+
+	datas := []*testData{
+		{
+			list:   []interface{}{1},
+			result: []interface{}{1},
+		},
+		{
+			list:   []interface{}{1, 1},
+			result: []interface{}{1},
+		},
+		{
+			list:   []interface{}{1, 2, 2},
+			result: []interface{}{1, 2},
+		},
+		{
+			list:   []interface{}{1, 2, 2, 3, 3, 4, 4, 5},
+			result: []interface{}{1, 2, 3, 4, 5},
+		},
+		{
+			list:   []interface{}{1, 2, 3, 4, 5},
+			result: []interface{}{1, 2, 3, 4, 5},
+		},
+	}
+
+	for _, data := range datas {
+		if result := DeleteDuplicates2(New(data.list...)); !listEqual(result.Dump(), data.result) {
+			t.Errorf("delete_duplicates2 error data.list:%+v result:%v data.result:%v", data.list, result.Dump(), data.result)
+		}
+	}
+
+}
