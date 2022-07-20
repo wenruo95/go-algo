@@ -510,17 +510,13 @@ func RotateRight(head *ListNode, k int) *ListNode {
 
 // leetcode 83: https://leetcode.com/problems/remove-duplicates-from-sorted-list/
 func DeleteDuplicates2(head *ListNode) *ListNode {
-	var prev, node *ListNode = head, head
-	for node != nil {
-		node = node.Next
-
-		for node != nil && node.Val == prev.Val {
-			node = node.Next
+	var current *ListNode = head
+	for current != nil && current.Next != nil {
+		if current.Val == current.Next.Val {
+			current.Next = current.Next.Next
+		} else {
+			current = current.Next
 		}
-
-		prev.Next = node
-		prev = node
 	}
-
 	return head
 }
