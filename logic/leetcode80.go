@@ -51,3 +51,26 @@ func SearchInRotatedSortedArrayII(nums []int, target int) bool {
 
 	return false
 }
+
+// leetcode 84: https://leetcode.com/problems/largest-rectangle-in-histogram/
+func LargestRectangleArea(heights []int) int {
+	var (
+		area  = 0
+		stack = NewStack()
+	)
+	heights = append(heights, 0)
+	for i := 0; i < len(heights); i++ {
+		for !stack.Empty() && heights[stack.Top()] >= heights[i] {
+			cur := stack.Top()
+			stack.Pop()
+
+			width := i
+			if !stack.Empty() {
+				width = (i - stack.Top() - 1)
+			}
+			area = intMax(area, heights[cur]*width)
+		}
+		stack.Push(i)
+	}
+	return area
+}

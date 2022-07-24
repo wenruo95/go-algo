@@ -91,3 +91,40 @@ func TestSearchInRotateArrayII(t *testing.T) {
 	}
 
 }
+
+func TestLargestRectangleArea(t *testing.T) {
+	type testData struct {
+		heights []int
+		area    int
+	}
+
+	datas := []*testData{
+		{
+			heights: []int{2, 1, 5, 6, 2, 3},
+			area:    10,
+		},
+		{
+			heights: []int{2, 4},
+			area:    4,
+		},
+		{
+			heights: []int{1},
+			area:    1,
+		},
+		{
+			heights: []int{1, 1},
+			area:    2,
+		},
+		{
+			heights: []int{2, 2, 2, 2},
+			area:    8,
+		},
+	}
+
+	for _, data := range datas {
+		if area := LargestRectangleArea(data.heights); area != data.area {
+			t.Errorf("largest_rectangle_area error. heights:%+v area:%v expect:%v", data.heights, area, data.area)
+		}
+	}
+
+}
