@@ -55,7 +55,7 @@ func (n *ListNode) Dump() []interface{} {
 	values := make([]interface{}, 0)
 
 	node := n
-	for node != nil {
+	for i := 0; i < 1000 && node != nil; i++ {
 		values = append(values, node.Val)
 		node = node.Next
 	}
@@ -519,4 +519,113 @@ func DeleteDuplicates2(head *ListNode) *ListNode {
 		}
 	}
 	return head
+}
+
+// leetcode 86: https://leetcode.com/problems/partition-list/
+func Partition(head *ListNode, x int) *ListNode {
+	if head == nil {
+		return nil
+	}
+
+	var smallerHead, smallerNode, largerHead *ListNode
+	if head.Val.(int) >= x {
+		largerHead = head
+	} else {
+		smallerHead = head
+		smallerNode = head
+	}
+
+	for head != nil && head.Next != nil {
+		node := head.Next
+		if node.Val.(int) >= x {
+			if largerHead == nil {
+				largerHead = node
+			}
+			head = node
+			continue
+		}
+
+		if smallerHead == nil {
+			smallerHead = node
+			smallerNode = node
+		}
+
+		if largerHead == nil {
+			smallerNode = node
+			head = node
+			continue
+		}
+		head.Next = node.Next
+		node.Next = nil
+		smallerNode.Next = node
+		smallerNode = node
+	}
+
+	if smallerHead == nil {
+		return largerHead
+	}
+	smallerNode.Next = largerHead
+	return smallerHead
+}
+
+func Partition2(head *ListNode, x int) *ListNode {
+	var node, smallerNode *ListNode
+	if node = head; node != nil && node.Val.(int) < x {
+		smallerNode = node
+	}
+
+	for node != nil && node.Next != nil {
+		if node.Next.Val.(int) >= x {
+			node = node.Next
+			continue
+		}
+
+		if smallerNode == nil {
+			smallerNode = node.Next
+			node.Next = node.Next.Next
+			smallerNode.Next = head
+			head = smallerNode
+			continue
+		}
+		if smallerNode == node {
+			node = node.Next
+			smallerNode = node
+			continue
+		}
+
+		tmp := node.Next
+		node.Next = node.Next.Next
+		tmp.Next = smallerNode.Next
+		smallerNode.Next = tmp
+		smallerNode = tmp
+	}
+
+	return head
+}
+
+func Partition3(head *ListNode, x int) *ListNode {
+	var (
+		smallHead = new(ListNode)
+		largeHead = new(ListNode)
+		small     = smallHead
+		large     = largeHead
+		node      = head
+	)
+	for node != nil {
+		if node.Val.(int) < x {
+			small.Next = node
+			node = node.Next
+
+			small = small.Next
+			small.Next = nil
+		} else {
+			large.Next = node
+			node = node.Next
+
+			large = large.Next
+			large.Next = nil
+		}
+	}
+	small.Next = largeHead.Next
+	return smallHead.Next
 }

@@ -664,3 +664,63 @@ func TestDeleteDumplicates2(t *testing.T) {
 	}
 
 }
+
+func TestPartition(t *testing.T) {
+	type testData struct {
+		list   []interface{}
+		x      int
+		result []interface{}
+	}
+
+	datas := []*testData{
+		{
+			list:   []interface{}{1, 4, 3, 2, 5, 2},
+			x:      3,
+			result: []interface{}{1, 2, 2, 4, 3, 5},
+		},
+		{
+			list:   []interface{}{1, 4, 3, 2, 5, 2},
+			x:      1,
+			result: []interface{}{1, 4, 3, 2, 5, 2},
+		},
+		{
+			list:   []interface{}{1, 4, 3, 2, 5, 2},
+			x:      5,
+			result: []interface{}{1, 4, 3, 2, 2, 5},
+		},
+		{
+			list:   []interface{}{2, 1},
+			x:      2,
+			result: []interface{}{1, 2},
+		},
+		{
+			list:   []interface{}{2},
+			x:      2,
+			result: []interface{}{2},
+		},
+		{
+			list:   []interface{}{1},
+			x:      2,
+			result: []interface{}{1},
+		},
+		{
+			list:   []interface{}{1, 4, 3, 0, 2, 5, 2},
+			x:      3,
+			result: []interface{}{1, 0, 2, 2, 4, 3, 5},
+		},
+	}
+
+	for _, data := range datas {
+		if result := Partition(New(data.list...), data.x); !listEqual(result.Dump(), data.result) {
+			t.Errorf("partition list:%+v x:%v result:%+v exist:%+v", data.list, data.x, result.Dump(), data.result)
+		}
+		if result := Partition2(New(data.list...), data.x); !listEqual(result.Dump(), data.result) {
+			t.Errorf("partition2 list:%+v x:%v result:%+v exist:%+v", data.list, data.x, result.Dump(), data.result)
+		}
+		if result := Partition3(New(data.list...), data.x); !listEqual(result.Dump(), data.result) {
+			t.Errorf("partition3 list:%+v x:%v result:%+v exist:%+v", data.list, data.x, result.Dump(), data.result)
+		}
+
+	}
+
+}
