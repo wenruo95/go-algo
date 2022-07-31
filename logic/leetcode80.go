@@ -1,10 +1,5 @@
 package logic
 
-import (
-	"fmt"
-	"strconv"
-)
-
 // leetcode 80: https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/
 func RemoveDuplicates2(nums []int) int {
 	var count, k int
@@ -83,9 +78,9 @@ func LargestRectangleArea(heights []int) int {
 // leetcode 85: https://leetcode.com/problems/maximal-rectangle/
 func MaximalRectangle(matrix [][]byte) int {
 	var (
-		columns  = make(map[string]int)
+		columns  = make(map[int]int)
 		columndp func(row, column int) int
-		rows     = make(map[string]int)
+		rows     = make(map[int]int)
 		rowsdp   func(row, column int) int
 	)
 	columndp = func(row, column int) int {
@@ -93,7 +88,7 @@ func MaximalRectangle(matrix [][]byte) int {
 			return 0
 		}
 
-		key := strconv.Itoa(row) + "_" + strconv.Itoa(column)
+		key := row<<8 + column
 		if v, exist := columns[key]; exist {
 			return v
 		}
@@ -112,7 +107,7 @@ func MaximalRectangle(matrix [][]byte) int {
 			return 0
 		}
 
-		key := strconv.Itoa(row) + "_" + strconv.Itoa(column)
+		key := row<<8 + column
 		if v, exist := rows[key]; exist {
 			return v
 		}
@@ -137,12 +132,31 @@ func MaximalRectangle(matrix [][]byte) int {
 				minColumn = intMin(minColumn, columndp(row, column+width-1))
 				max = intMax(max, width*minColumn)
 			}
-			fmt.Printf("[TEST0] row:%v column:%v max_row:%v min_column:%v max:%v\n",
-				row, column, maxRow, minColumn, max)
+			//fmt.Printf("[TEST0] row:%v column:%v max_row:%v min_column:%v max:%v\n",
+			//	row, column, maxRow, minColumn, max)
 
 		}
 	}
-	fmt.Printf("[TEST9] rows:%v columns:%v max:%v\n", jsonstr(rows), jsonstr(columns), max)
+	//fmt.Printf("[TEST9] rows:%v columns:%v max:%v\n", jsonstr(rows), jsonstr(columns), max)
 
+	return max
+}
+
+func MaximalRectangle2(matrix [][]byte) int {
+	var (
+		max     int
+		heights = make([]int, len(matrix[0]))
+	)
+
+	for row := 0; row < len(matrix); row++ {
+		for column := 0; column < len(matrix[0]); column++ {
+			if matrix[row][column] == '1' {
+				heights[column] = heights[column] + 1
+			} else {
+				heights[column] = 0
+			}
+		}
+		max = intMax(max, LargestRectangleArea(heights))
+	}
 	return max
 }

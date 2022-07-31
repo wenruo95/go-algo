@@ -278,6 +278,9 @@ func TestMaximalRectangle(t *testing.T) {
 		if result := MaximalRectangle(data.matrix); result != data.max {
 			t.Errorf("maximal_rectangle matrix:%v result:%v expect:%v", byteArr2Str(data.matrix), result, data.max)
 		}
+		if result := MaximalRectangle2(data.matrix); result != data.max {
+			t.Errorf("maximal_rectangle2 matrix:%v result:%v expect:%v", byteArr2Str(data.matrix), result, data.max)
+		}
 	}
 
 }
