@@ -284,3 +284,28 @@ func TestMaximalRectangle(t *testing.T) {
 	}
 
 }
+
+func TestIsScramble(t *testing.T) {
+
+	type testData struct {
+		s1 string
+		s2 string
+		b  bool
+	}
+
+	datas := []*testData{
+		{s1: "great", s2: "rgeat", b: true},
+		{s1: "abced", s2: "caebd", b: false},
+		{s1: "a", s2: "a", b: true},
+		{s1: "abcdefghijklmn", s2: "efghijklmncadb", b: false},
+		{s1: "abb", s2: "bba", b: true},
+	}
+
+	for _, data := range datas {
+		if b := IsScramble(data.s1, data.s2); b != data.b {
+			t.Errorf("is_scrambel error. s1:%v s2:%v scramble:%v expect:%v", data.s1, data.s2, b, data.b)
+		}
+
+	}
+
+}

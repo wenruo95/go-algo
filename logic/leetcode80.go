@@ -160,3 +160,55 @@ func MaximalRectangle2(matrix [][]byte) int {
 	}
 	return max
 }
+
+// leetcode 87: https://leetcode.com/problems/scramble-string/
+func IsScramble(s1 string, s2 string) bool {
+	if s1 == s2 {
+		return true
+	}
+	if len(s1) != len(s2) {
+		return false
+	}
+
+	var memo = make(map[string]bool)
+	var scramble func(src, dst string) bool
+
+	scramble = func(src, dst string) bool {
+		if len(src) == 1 {
+			return src == dst
+		}
+		if src == dst {
+			return true
+		}
+		if len(src) != len(dst) {
+			return false
+		}
+
+		if v, exist := memo[src+":"+dst]; exist {
+			return v
+		}
+
+		var chs [26]int
+		for i := 0; i < len(src); i++ {
+			chs[src[i]-'a']++
+			chs[dst[i]-'a']--
+		}
+		for _, count := range chs {
+			if count != 0 {
+				memo[src+":"+dst] = false
+				return false
+			}
+		}
+
+		var res bool
+		for i := 1; i < len(src); i++ {
+			res = res ||
+				(scramble(src[0:i], dst[0:i]) && scramble(src[i:], dst[i:])) ||
+				(scramble(src[0:i], dst[len(src)-i:]) && scramble(src[i:], dst[0:len(src)-i]))
+		}
+		memo[src+":"+dst] = res
+		return res
+	}
+
+	return scramble(s1, s2)
+}
