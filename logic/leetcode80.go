@@ -1,5 +1,9 @@
 package logic
 
+import (
+	"math"
+)
+
 // leetcode 80: https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/
 func RemoveDuplicates2(nums []int) int {
 	var count, k int
@@ -211,4 +215,33 @@ func IsScramble(s1 string, s2 string) bool {
 	}
 
 	return scramble(s1, s2)
+}
+
+// leetcode 88: https://leetcode.com/problems/merge-sorted-array/
+func MergeSortedArray(nums1 []int, m int, nums2 []int, n int) {
+	last := len(nums1) - 1
+	for n > 0 {
+		if m > 0 && nums1[m-1] > nums2[n-1] {
+			nums1[last] = nums1[m-1]
+			last = last - 1
+			m = m - 1
+		} else {
+			nums1[last] = nums2[n-1]
+			last = last - 1
+			n = n - 1
+		}
+	}
+}
+
+// leetcode 89: https://leetcode.com/problems/gray-code/
+func GrayCode(n int) []int {
+	arr := make([]int, 0, int(math.Pow(2, float64(n))))
+	arr = append(arr, 0)
+	for i := 0; i < n; i++ {
+		length := len(arr)
+		for j := length - 1; j >= 0; j-- {
+			arr = append(arr, arr[j]|(1<<i))
+		}
+	}
+	return arr
 }
