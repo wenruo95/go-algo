@@ -32,3 +32,36 @@ func SubsetsWithDup(nums []int) [][]int {
 
 	return result
 }
+
+// https://leetcode.com/problems/decode-ways/
+func NumDecodings(s string) int {
+
+	var (
+		dp   func(s string, start int) int
+		memo = make(map[int]int)
+	)
+
+	dp = func(s string, start int) int {
+		if start > len(s)-1 {
+			return 1
+		}
+		if s[start] <= '0' || s[start] > '9' {
+			return 0
+		}
+		if v, exist := memo[start]; exist {
+			return v
+		}
+
+		count := dp(s, start+1)
+		if start+1 < len(s) {
+			if sum := (s[start]-'0')*10 + (s[start+1] - '0'); sum > 0 && sum <= 26 {
+				count = count + dp(s, start+2)
+			}
+		}
+
+		memo[start] = count
+		return count
+	}
+
+	return dp(s, 0)
+}
