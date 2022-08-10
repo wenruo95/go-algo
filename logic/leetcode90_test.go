@@ -1,6 +1,8 @@
 package logic
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestSubsetWithDup(t *testing.T) {
 	type testData struct {
@@ -46,4 +48,36 @@ func TestNumDecodings(t *testing.T) {
 			t.Errorf("num_decodings s:%v n:%v expect:%v", data.s, n, data.n)
 		}
 	}
+}
+
+func TestRestoreIpAddresses(t *testing.T) {
+	type testData struct {
+		s      string
+		result []string
+	}
+	datas := []*testData{
+		{
+			s:      "25525511135",
+			result: []string{"255.255.11.135", "255.255.111.35"},
+		},
+		{
+			s:      "0000",
+			result: []string{"0.0.0.0"},
+		},
+		{
+			s:      "101023",
+			result: []string{"1.0.10.23", "1.0.102.3", "10.1.0.23", "10.10.2.3", "101.0.2.3"},
+		},
+		{
+			s:      "1111",
+			result: []string{"1.1.1.1"},
+		},
+	}
+
+	for _, data := range datas {
+		if result := RestoreIpAddresses(data.s); !stringListItemEqual(data.result, result) {
+			t.Errorf("restore_ip_address error. s:%v result:%v expect:%v", data.s, result, data.result)
+		}
+	}
+
 }

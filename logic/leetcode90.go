@@ -33,7 +33,7 @@ func SubsetsWithDup(nums []int) [][]int {
 	return result
 }
 
-// https://leetcode.com/problems/decode-ways/
+// leetcode 91: https://leetcode.com/problems/decode-ways/
 func NumDecodings(s string) int {
 
 	var (
@@ -64,4 +64,41 @@ func NumDecodings(s string) int {
 	}
 
 	return dp(s, 0)
+}
+
+// leetcode 93: https://leetcode.com/problems/restore-ip-addresses/
+func RestoreIpAddresses(s string) []string {
+	var (
+		pos [3]int
+		dp  func(s string, index, posIndex int) []string
+	)
+
+	dp = func(s string, index int, posIndex int) []string {
+		if posIndex >= 3 || index >= len(s) {
+			if size := len(s) - index; (size == 1) ||
+				(size == 2 && s[index] != '0') || (size == 3 && s[index] != '0' && s[index:] <= "255") {
+				return []string{s[0:pos[0]] + "." + s[pos[0]:pos[1]] + "." + s[pos[1]:pos[2]] + "." + s[pos[2]:]}
+			}
+			return nil
+		}
+
+		pos[posIndex] = index + 1
+		arr := dp(s, index+1, posIndex+1)
+
+		if s[index] != '0' {
+			if index+1 < len(s) {
+				pos[posIndex] = index + 2
+				arr = append(arr, dp(s, index+2, posIndex+1)...)
+			}
+
+			if index+2 < len(s) && s[index:index+3] <= "255" {
+				pos[posIndex] = index + 3
+				arr = append(arr, dp(s, index+3, posIndex+1)...)
+			}
+		}
+
+		return arr
+	}
+
+	return dp(s, 0, 0)
 }
