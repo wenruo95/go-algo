@@ -724,3 +724,35 @@ func TestPartition(t *testing.T) {
 	}
 
 }
+
+func TestReverseBetweenN(t *testing.T) {
+	type testData struct {
+		src   []interface{}
+		left  int
+		right int
+		dst   []interface{}
+	}
+	datas := []*testData{
+		{
+			src:   []interface{}{1, 2, 3, 4, 5},
+			left:  2,
+			right: 4,
+			dst:   []interface{}{1, 4, 3, 2, 5},
+		},
+		{
+			src:   []interface{}{5},
+			left:  1,
+			right: 1,
+			dst:   []interface{}{5},
+		},
+	}
+
+	for _, data := range datas {
+		result := ReverseBetween(New(data.src...), data.left, data.right)
+		if !listEqual(result.Dump(), data.dst) {
+			t.Errorf("list not equal. src:%+v left:%+v right:%+v result:%+v expect:%+v",
+				data.src, data.left, data.right, result.Dump(), data.dst)
+		}
+	}
+
+}

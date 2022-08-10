@@ -629,3 +629,31 @@ func Partition3(head *ListNode, x int) *ListNode {
 	small.Next = largeHead.Next
 	return smallHead.Next
 }
+
+// leetcode 92: https://leetcode.com/problems/reverse-linked-list-ii/
+func ReverseBetween(head *ListNode, left int, right int) *ListNode {
+	var suffix *ListNode
+	var reversefn func(node *ListNode, n int) *ListNode
+	reversefn = func(node *ListNode, n int) *ListNode {
+		if node == nil || node.Next == nil {
+			suffix = nil
+			return node
+		}
+		if n <= 1 {
+			suffix = node.Next
+			return node
+		}
+
+		last := reversefn(node.Next, n-1)
+		node.Next.Next = node
+		node.Next = suffix
+		return last
+	}
+
+	if left == 1 {
+		return reversefn(head, right)
+	}
+	head.Next = ReverseBetween(head.Next, left-1, right-1)
+
+	return head
+}
