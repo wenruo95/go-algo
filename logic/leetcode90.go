@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"log"
 	"sort"
 )
 
@@ -25,7 +24,6 @@ func SubsetsWithDup(nums []int) [][]int {
 			track[high] = nums[i]
 			backtrack(i+1, high+1)
 		}
-		log.Printf("[TEST] start:%v high:%v track:%+v result:%+v", start, high, track, jsonstr(result))
 	}
 
 	backtrack(0, 0)

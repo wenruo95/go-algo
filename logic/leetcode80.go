@@ -136,12 +136,9 @@ func MaximalRectangle(matrix [][]byte) int {
 				minColumn = intMin(minColumn, columndp(row, column+width-1))
 				max = intMax(max, width*minColumn)
 			}
-			//fmt.Printf("[TEST0] row:%v column:%v max_row:%v min_column:%v max:%v\n",
-			//	row, column, maxRow, minColumn, max)
 
 		}
 	}
-	//fmt.Printf("[TEST9] rows:%v columns:%v max:%v\n", jsonstr(rows), jsonstr(columns), max)
 
 	return max
 }
