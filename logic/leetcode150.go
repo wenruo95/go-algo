@@ -37,3 +37,35 @@ func ReverseWords(s string) string {
 	}
 	return result
 }
+
+// leetcode 152: https://leetcode.com/problems/maximum-product-subarray/
+func MaxProduct(nums []int) int {
+	result := nums[0]
+	min, max := result, result
+	for i := 1; i < len(nums); i++ {
+		m1, m2 := nums[i]*min, nums[i]*max
+		max = maxInt(nums[i], m1, m2)
+		min = minInt(nums[i], m1, m2)
+		result = maxInt(result, max)
+	}
+	return result
+}
+
+// leetcode 153: https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
+func FindMinItemInRotatedArray(nums []int) int {
+	left, right, mid := 0, len(nums)-1, 0
+	for left < right {
+		if nums[left] < nums[right] {
+			break
+		}
+
+		mid = (left + right) / 2
+		if nums[mid] < nums[right] {
+			right = mid
+		} else {
+			left = mid + 1
+
+		}
+	}
+	return nums[left]
+}

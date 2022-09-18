@@ -207,13 +207,13 @@ func LongestValidParentheses(s string) int {
 
 			right = right + 1
 			if left == right {
-				maxlen = intmax(maxlen, left+right)
+				maxlen = intMax(maxlen, left+right)
 				continue
 			}
 
 			if left < right {
 				index = j - 1
-				maxlen = intmax(maxlen, left+right-1)
+				maxlen = intMax(maxlen, left+right-1)
 				break
 			}
 		}
@@ -221,13 +221,6 @@ func LongestValidParentheses(s string) int {
 	}
 
 	return maxlen
-}
-
-func intmax(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }
 
 // leetcode 34: https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
