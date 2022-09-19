@@ -63,6 +63,39 @@ func TestRegularIsMatch(t *testing.T) {
 	}
 }
 
+func TestMaxAreaInContainer(t *testing.T) {
+	type testData struct {
+		heights []int
+		result  int
+	}
+
+	datas := []*testData{
+		{
+			heights: []int{1, 8, 6, 2, 5, 4, 8, 3, 7},
+			result:  49,
+		},
+		{
+			heights: []int{1, 1},
+			result:  1,
+		},
+		{
+			heights: []int{4, 3, 2, 1, 4},
+			result:  16,
+		},
+		{
+			heights: []int{1, 2, 1},
+			result:  2,
+		},
+	}
+
+	for _, data := range datas {
+		if result := MaxAreaInContainer(data.heights); result != data.result {
+			t.Errorf("max_area_in_container heights:%+v result:%+v expect:%+v", data.heights, result, data.result)
+		}
+	}
+
+}
+
 // leetcode 16
 func TestTreeSumClosest(t *testing.T) {
 

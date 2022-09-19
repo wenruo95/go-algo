@@ -65,6 +65,27 @@ func RegularIsMatch(s string, p string) bool {
 	return regularIsMatch(s, 0, p, 0)
 }
 
+// leetcode 11: https://leetcode.com/problems/container-with-most-water/
+func MaxAreaInContainer(height []int) int {
+	lo, hi := 0, len(height)-1
+
+	var result int
+	for lo < hi {
+		maxArea := intMin(height[lo], height[hi]) * (hi - lo)
+		if maxArea > result {
+			result = maxArea
+		}
+
+		if height[lo] < height[hi] {
+			lo = lo + 1
+		} else {
+			hi = hi - 1
+		}
+
+	}
+	return result
+}
+
 // leetcode 16: https://leetcode.com/problems/3sum-closest/
 func ThreeSumClosest(nums []int, target int) int {
 	sort.Ints(nums)
