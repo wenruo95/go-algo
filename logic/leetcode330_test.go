@@ -33,6 +33,10 @@ func TestCountBits(t *testing.T) {
 		if list := CountBits(data.n); !intListEqual(list, data.list) {
 			t.Errorf("count bits error. data:%+v list:%v", data, list)
 		}
+		if list := CountBits2(data.n); !intListEqual(list, data.list) {
+			t.Errorf("count bits2 error. data:%+v list:%v", data, list)
+		}
+
 	}
 
 }

@@ -29,3 +29,21 @@ func CountBits(n int) []int {
 
 	return list
 }
+
+func CountBits2(n int) []int {
+	list := make([]int, n+1)
+	list[0] = 0
+	for sum := 1; sum <= n; sum = sum * 2 {
+		list[sum] = 1
+	}
+
+	preValue := 2
+	for i := 3; i <= n; i++ {
+		if list[i] == 1 {
+			preValue = i
+			continue
+		}
+		list[i] = list[preValue] + list[i-preValue]
+	}
+	return list
+}
