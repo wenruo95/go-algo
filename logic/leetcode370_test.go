@@ -1,4 +1,4 @@
-package algo
+package logic
 
 import "testing"
 

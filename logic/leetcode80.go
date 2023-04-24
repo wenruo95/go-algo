@@ -64,13 +64,13 @@ func LargestRectangleArea(heights []int) int {
 	)
 	heights = append(heights, 0)
 	for i := 0; i < len(heights); i++ {
-		for !stack.Empty() && heights[stack.Top()] >= heights[i] {
-			cur := stack.Top()
+		for stack.Size() > 0 && heights[stack.Top().(int)] >= heights[i] {
+			cur := stack.Top().(int)
 			stack.Pop()
 
 			width := i
-			if !stack.Empty() {
-				width = (i - stack.Top() - 1)
+			if stack.Size() > 0 {
+				width = (i - stack.Top().(int) - 1)
 			}
 			area = intMax(area, heights[cur]*width)
 		}

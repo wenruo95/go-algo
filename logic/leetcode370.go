@@ -1,4 +1,4 @@
-package algo
+package logic
 
 // leetcode 371: https://leetcode.com/problems/sum-of-two-integers/
 func GetSumOfTwoIntegers(a int, b int) int {

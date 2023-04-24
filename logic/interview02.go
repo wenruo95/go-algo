@@ -34,7 +34,7 @@ func quickSort(nums []int, left int, right int) {
 	nums[left] = nums[a]
 	nums[a] = pivotValue
 
-	pivot := b
+	pivot := a
 	quickSort(nums, left, pivot-1)
 	quickSort(nums, pivot+1, right)
 }
