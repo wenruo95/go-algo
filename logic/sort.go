@@ -143,3 +143,61 @@ func MergeSortItera(arr []int) {
 	}
 
 }
+
+func FindKth(arr []int, k int) int {
+	return findKth(arr, len(arr)-k, 0, len(arr)-1)
+}
+
+func findKth(arr []int, k int, lo, hi int) int {
+	left, right := lo, hi
+	pivotValue := arr[lo]
+	for left < right {
+		for left < right && arr[right] >= pivotValue {
+			right--
+		}
+		for left < right && arr[left] <= pivotValue {
+			left++
+		}
+		arr[left], arr[right] = arr[right], arr[left]
+	}
+	arr[lo] = arr[left]
+	arr[left] = pivotValue
+
+	pivotIndex := left
+	if k == pivotIndex {
+		return arr[k]
+	}
+
+	if k < pivotIndex {
+		return findKth(arr, k, lo, left-1)
+	}
+	return findKth(arr, k, left+1, hi)
+}
+
+func FindKthOfTwoSortedArray(nums1 []int, nums2 []int, k int) int {
+	k = len(nums1) + len(nums2) - k + 1
+
+	var left1, left2 int
+	for left1 < len(nums1) || left2 < len(nums2) {
+		if left1 == len(nums1) {
+			return nums2[k-len(nums1)-1]
+		}
+		if left2 == len(nums2) {
+			return nums1[k-len(nums2)-1]
+		}
+
+		if nums1[left1] <= nums2[left2] {
+			if left1+left2+1 == k {
+				return nums1[left1]
+			}
+			left1++
+		} else {
+			if left1+left2+1 == k {
+				return nums2[left2]
+			}
+			left2++
+		}
+	}
+
+	return -1
+}
