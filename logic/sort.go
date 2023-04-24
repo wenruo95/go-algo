@@ -1,5 +1,7 @@
 package logic
 
+import "fmt"
+
 // Rec: recursion
 // Iter: iteration
 
@@ -36,7 +38,8 @@ func quickSortRecur(arr []int, lo, hi int) {
 func QuickSortItera(arr []int) {
 	st := NewStack()
 	st.Push([]int{0, len(arr) - 1})
-	for st.Size() > 0 {
+
+	for st.Top() != nil {
 		value := st.Pop().([]int)
 		lo, hi := value[0], value[1]
 		if lo >= hi {
@@ -60,6 +63,83 @@ func QuickSortItera(arr []int) {
 		pivotIndex := left
 		st.Push([]int{lo, pivotIndex - 1})
 		st.Push([]int{pivotIndex + 1, hi})
+	}
+}
+
+func MergeSortRecur(arr []int) {
+	aux := make([]int, len(arr))
+	mergeSort(arr, aux, 0, len(arr)-1)
+}
+
+func mergeSort(arr, aux []int, lo, hi int) {
+	if lo >= hi {
+		return
+	}
+
+	mid := lo + (hi-lo)/2
+	mergeSort(arr, aux, lo, mid)
+	mergeSort(arr, aux, mid+1, hi)
+
+	left1, left2 := lo, mid+1
+	for index := lo; left1 <= mid || left2 <= hi; index++ {
+		if left2 > hi || (left1 <= mid && arr[left1] <= arr[left2]) {
+			aux[index] = arr[left1]
+			left1++
+			continue
+		}
+
+		aux[index] = arr[left2]
+		left2++
+	}
+
+	for i := lo; i <= hi; i++ {
+		arr[i] = aux[i]
+	}
+}
+
+func MergeSortItera(arr []int) {
+	stack := NewStack()
+
+	auxStack := NewStack()
+	auxStack.Push([]int{0, len(arr) - 1})
+	auxMap := make(map[string]struct{})
+	for auxStack.Top() != nil {
+		value := auxStack.Pop().([]int)
+		lo, hi := value[0], value[1]
+		if lo >= hi {
+			continue
+		}
+
+		key := fmt.Sprintf("%d_%d", lo, hi)
+		if _, exist := auxMap[key]; exist {
+			continue
+		}
+		auxMap[key] = struct{}{}
+
+		mid := lo + (hi-lo)/2
+		stack.Push([]int{lo, mid, hi})
+		auxStack.Push([]int{lo, mid})
+		auxStack.Push([]int{mid + 1, hi})
+	}
+
+	aux := make([]int, len(arr))
+	for stack.Top() != nil {
+		value := stack.Pop().([]int)
+		lo, mid, hi := value[0], value[1], value[2]
+
+		left1, left2 := lo, mid+1
+		for index := lo; left1 <= mid || left2 <= hi; index++ {
+			if left2 > hi || (left1 <= mid && arr[left1] <= arr[left2]) {
+				aux[index] = arr[left1]
+				left1++
+				continue
+			}
+			aux[index] = arr[left2]
+			left2++
+		}
+		for i := lo; i <= hi; i++ {
+			arr[i] = aux[i]
+		}
 	}
 
 }

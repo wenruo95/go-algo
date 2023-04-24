@@ -17,28 +17,40 @@ func randIntList(size int, max int) []int {
 	return arr
 }
 
-func Test_QuickSort(t *testing.T) {
+func testSort(t *testing.T, name string, sortFn func(arr []int), debug ...bool) {
 	rand.Seed(time.Now().UnixNano())
 
 	maxList := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 100000}
 	sizeList := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 200}
+
+	if len(debug) > 0 && debug[0] {
+		maxList = []int{8}
+		sizeList = []int{10}
+	}
 	for _, size := range sizeList {
 		for _, max := range maxList {
 			result := randIntList(size, max)
-
-			result2 := make([]int, size)
-			copy(result2, result)
 
 			expect := make([]int, size)
 			copy(expect, result)
 			sort.Ints(expect)
 
-			QuickSortRecur(result)
-			QuickSortItera(result2)
+			sortFn(result)
 
-			assert.Equal(t, expect, result)
-			assert.Equal(t, expect, result2)
+			if !assert.Equal(t, expect, result) {
+				t.Errorf("assert %v error", name)
+			}
 		}
 	}
 
+}
+
+func Test_QuickSort(t *testing.T) {
+	testSort(t, "quick_sort_recursion", QuickSortRecur)
+	testSort(t, "quick_sort_iteration", QuickSortItera)
+}
+
+func Test_MergeSort(t *testing.T) {
+	testSort(t, "merge_sort_recursion", MergeSortRecur)
+	testSort(t, "merge_sort_iteration", MergeSortItera)
 }
