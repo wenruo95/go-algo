@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"container/heap"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -82,4 +83,20 @@ func Test_ContainerQueue(t *testing.T) {
 
 	assert.Equal(t, queue.Top(), nil)
 	assert.Equal(t, queue.Size(), 0)
+}
+
+func Test_ContainerHeap(t *testing.T) {
+
+	h := &IntHeap{2, 1, 5}
+	heap.Init(h)
+	heap.Push(h, 3)
+
+	for index, value := range *h {
+		t.Logf("index:%v value:%v", index, value)
+	}
+
+	for h.Len() > 0 {
+		t.Logf("pop %d", heap.Pop(h))
+	}
+
 }
