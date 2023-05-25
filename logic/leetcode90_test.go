@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -166,7 +165,6 @@ func genTreeNode(list []interface{}) *TreeNode {
 		}
 		nodes[i] = node
 	}
-	fmt.Printf("[GEN] %+v\n", nodes)
 
 	return nodes[0]
 }
@@ -227,7 +225,6 @@ func treeNodeDump(root *TreeNode) []interface{} {
 		list = list2[0:]
 		list2 = make([]*TreeNode, 0)
 	}
-	fmt.Printf("[DEBUG-XXX] %+v [4]:%v\n", nodes, nodes[4])
 
 	res := make([]interface{}, len(nodes))
 	for i, v := range nodes {
@@ -243,7 +240,6 @@ func treeNodeDump(root *TreeNode) []interface{} {
 
 	}
 
-	fmt.Printf("[DEBUG-YYY] %+v %+v\n", res, res[0:pos+1])
 	return res[0 : pos+1]
 }
 
@@ -267,11 +263,17 @@ func TestRecoverTree(t *testing.T) {
 
 	for _, data := range datas {
 		root := genTreeNode(data.list)
-		t.Logf("[DEBUG0] %+v", treeNodeDump(root))
 		RecoverTree(root)
-		t.Logf("[DEBUG1] %+v", treeNodeDump(root))
 
 		result := treeNodeDump(root)
 		assert.Equal(t, data.result, result)
 	}
+	for _, data := range datas {
+		root := genTreeNode(data.list)
+		RecoverTree2(root)
+
+		result := treeNodeDump(root)
+		assert.Equal(t, data.result, result)
+	}
+
 }

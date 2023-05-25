@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"fmt"
 	"math"
 	"sort"
 	"strconv"
@@ -211,32 +210,61 @@ func IsValidBST(root *TreeNode) bool {
 
 // leetcode 99: https://leetcode.com/problems/recover-binary-search-tree/
 func RecoverTree(root *TreeNode) {
-	var recov func(node *TreeNode) (*TreeNode, *TreeNode)
+	var inorder func(node *TreeNode)
 
-	recov = func(node *TreeNode) (*TreeNode, *TreeNode) {
+	nodeList, valList := make([]*TreeNode, 0), make([]int, 0)
+
+	inorder = func(node *TreeNode) {
 		if node == nil {
-			return nil, nil
+			return
 		}
-
-		leftMin, leftMax := recov(node.Left)
-		rightMin, rightMax := recov(node.Right)
-		if leftMax != nil && node.Val < leftMax.Val {
-			fmt.Printf("[SWAP] node:%v leftmax:%v\n", node.Val, leftMax.Val)
-			node.Val, leftMax.Val = leftMax.Val, node.Val
-		}
-		if rightMin != nil && node.Val > rightMin.Val {
-			fmt.Printf("[SWAP] node:%v rightmin:%v\n", node.Val, rightMin.Val)
-			node.Val, rightMin.Val = rightMin.Val, node.Val
-		}
-
-		if leftMin == nil || leftMin.Val > node.Val {
-			leftMin = node
-		}
-		if rightMax == nil || rightMax.Val < node.Val {
-			rightMax = node
-		}
-		return leftMin, rightMax
+		inorder(node.Left)
+		nodeList = append(nodeList, node)
+		valList = append(valList, node.Val)
+		inorder(node.Right)
 	}
 
-	recov(root)
+	inorder(root)
+
+	sort.Ints(valList)
+	for i := 0; i < len(nodeList); i++ {
+		if nodeList[i].Val != valList[i] {
+			nodeList[i].Val = valList[i]
+		}
+	}
+
+}
+
+func RecoverTree2(root *TreeNode) {
+	var pre, first, second *TreeNode
+
+	var inorder func(node *TreeNode)
+
+	inorder = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		inorder(node.Left)
+
+		if pre == nil {
+			pre = node
+		} else {
+			if pre.Val > node.Val {
+				if first == nil {
+					first = pre
+				}
+				second = node
+			}
+			pre = node
+		}
+
+		inorder(node.Right)
+	}
+
+	inorder(root)
+
+	if first == nil || second == nil {
+		return
+	}
+	first.Val, second.Val = second.Val, first.Val
 }
