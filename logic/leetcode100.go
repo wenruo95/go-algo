@@ -95,3 +95,100 @@ func LevelOrder2(root *TreeNode) [][]int {
 
 	return res
 }
+
+// leetcode 103: https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
+func ZigzagLevelOrder(root *TreeNode) [][]int {
+	res := make([][]int, 0)
+	if root == nil {
+		return res
+	}
+
+	queue := NewQueue()
+	queue.Push(root)
+	for queue.Top() != nil {
+		size := queue.Size()
+		list := make([]int, 0)
+		for i := 0; i < size; i++ {
+			node := queue.Pop().(*TreeNode)
+			list = append(list, node.Val)
+			if node.Left != nil {
+				queue.Push(node.Left)
+			}
+			if node.Right != nil {
+				queue.Push(node.Right)
+			}
+		}
+
+		if len(res)%2 != 0 {
+			for i := 0; i < len(list)/2; i++ {
+				j := len(list) - 1 - i
+				list[i], list[j] = list[j], list[i]
+			}
+		}
+		res = append(res, list)
+	}
+
+	return res
+}
+
+// leetcode 104: https://leetcode.com/problems/maximum-depth-of-binary-tree/
+func MaxDepth(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	return intMax(MaxDepth(root.Left), MaxDepth(root.Right)) + 1
+}
+
+// leetcode 105: https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+func PreOrderAndInOrderBuildTree(preorder []int, inorder []int) *TreeNode {
+	var build func(preLeft, preRight, inLeft, inRight int) *TreeNode
+
+	inValue2Index := make(map[int]int)
+	for index, value := range inorder {
+		inValue2Index[value] = index
+	}
+
+	build = func(preLeft, preRight, inLeft, inRight int) *TreeNode {
+		if preLeft > preRight || inLeft > inRight {
+			return nil
+		}
+		node := new(TreeNode)
+		node.Val = preorder[preLeft]
+
+		pivot := inValue2Index[node.Val]
+		leftCount := pivot - inLeft
+
+		node.Left = build(preLeft+1, preLeft+leftCount, inLeft, pivot-1)
+		node.Right = build(preLeft+leftCount+1, preRight, pivot+1, inRight)
+		return node
+	}
+
+	return build(0, len(preorder)-1, 0, len(inorder)-1)
+}
+
+// leetcode 106: https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+func InOrderAndPostOrderBuildTree(inorder []int, postorder []int) *TreeNode {
+	var build func(inLeft, inRight, postLeft, postRight int) *TreeNode
+
+	inValue2Index := make(map[int]int)
+	for index, value := range inorder {
+		inValue2Index[value] = index
+	}
+
+	build = func(inLeft, inRight, postLeft, postRight int) *TreeNode {
+		if inLeft > inRight || postLeft > postRight {
+			return nil
+		}
+		node := new(TreeNode)
+		node.Val = postorder[postRight]
+
+		pivot := inValue2Index[node.Val]
+		leftCount := pivot - inLeft
+
+		node.Left = build(inLeft, pivot-1, postLeft, postLeft+leftCount-1)
+		node.Right = build(pivot+1, inRight, postLeft+leftCount, postRight-1)
+		return node
+	}
+
+	return build(0, len(inorder)-1, 0, len(postorder)-1)
+}
