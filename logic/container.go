@@ -100,3 +100,25 @@ func (h *IntHeap) Pop() interface{} {
 	*h = old[0 : n-1]
 	return x
 }
+
+type FrequentData struct {
+	Count int
+	Value int
+}
+type FrequentHeap []*FrequentData
+
+func (h FrequentHeap) Len() int           { return len(h) }
+func (h FrequentHeap) Less(i, j int) bool { return h[i].Count > h[j].Count }
+func (h FrequentHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *FrequentHeap) Push(x interface{}) {
+	*h = append(*h, x.(*FrequentData))
+}
+
+func (h *FrequentHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}

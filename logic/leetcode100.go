@@ -192,3 +192,36 @@ func InOrderAndPostOrderBuildTree(inorder []int, postorder []int) *TreeNode {
 
 	return build(0, len(inorder)-1, 0, len(postorder)-1)
 }
+
+// leetcode 107: https://leetcode.com/problems/binary-tree-level-order-traversal-ii/description/
+func LevelOrderBottom(root *TreeNode) [][]int {
+	res := make([][]int, 0)
+	if root == nil {
+		return res
+	}
+
+	queue := NewQueue()
+	queue.Push(root)
+	for queue.Top() != nil {
+		size := queue.Size()
+		list := make([]int, 0)
+		for i := 0; i < size; i++ {
+			node := queue.Pop().(*TreeNode)
+			list = append(list, node.Val)
+			if node.Left != nil {
+				queue.Push(node.Left)
+			}
+			if node.Right != nil {
+				queue.Push(node.Right)
+			}
+		}
+		res = append(res, list)
+	}
+
+	res2 := make([][]int, len(res))
+	for i := 0; i < len(res); i++ {
+		x := len(res) - i - 1
+		res2[x] = res[i]
+	}
+	return res2
+}

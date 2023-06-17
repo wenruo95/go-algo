@@ -209,3 +209,33 @@ func TestInOrderAndPostOrderBuildTree(t *testing.T) {
 
 	}
 }
+
+func TestLevelOrderBottom(t *testing.T) {
+
+	type testData struct {
+		list []interface{}
+		res  [][]int
+	}
+
+	datas := []*testData{
+		{
+			list: []interface{}{3, 9, 20, nil, nil, 15, 7},
+			res:  [][]int{{15, 7}, {9, 20}, {3}},
+		},
+		{
+			list: []interface{}{1},
+			res:  [][]int{{1}},
+		},
+		{
+			list: []interface{}{},
+			res:  [][]int{},
+		},
+	}
+
+	for _, data := range datas {
+		node := genTreeNode(data.list)
+		res := LevelOrderBottom(node)
+		assert.Equal(t, data.res, res)
+	}
+
+}

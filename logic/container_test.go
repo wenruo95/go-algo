@@ -100,3 +100,24 @@ func Test_ContainerHeap(t *testing.T) {
 	}
 
 }
+
+func Test_ContainerFrequentHeap(t *testing.T) {
+
+	h := make(FrequentHeap, 0)
+	heap.Init(&h)
+	heap.Push(&h, &FrequentData{Count: 3, Value: 3})
+	heap.Push(&h, &FrequentData{Count: 3, Value: 4})
+	heap.Push(&h, &FrequentData{Count: 3, Value: 5})
+	heap.Push(&h, &FrequentData{Count: 1, Value: 1})
+	heap.Push(&h, &FrequentData{Count: 6, Value: 6})
+
+	for index, value := range h {
+		t.Logf("index:%v count:%v value:%v", index, value.Count, value.Value)
+	}
+
+	for h.Len() > 0 {
+		x := heap.Pop(&h).(*FrequentData)
+		t.Logf("pop count:%v value:%v", x.Count, x.Value)
+	}
+
+}
