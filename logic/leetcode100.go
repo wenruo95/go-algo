@@ -225,3 +225,34 @@ func LevelOrderBottom(root *TreeNode) [][]int {
 	}
 	return res2
 }
+
+// leetcode 108: https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
+func SortedArrayToBST(nums []int) *TreeNode {
+	var build func(lo, hi int) *TreeNode
+
+	build = func(lo, hi int) *TreeNode {
+		if lo > hi {
+			return nil
+		}
+		mid := lo + (hi-lo)/2
+		node := &TreeNode{Val: nums[mid]}
+		node.Left = build(lo, mid-1)
+		node.Right = build(mid+1, hi)
+		return node
+	}
+	return build(0, len(nums)-1)
+}
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+// leetcode 109: https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/
+func SortedListToBST(head *ListNode) *TreeNode {
+	nums := make([]int, 0)
+	for node := head; node != nil; node = node.Next {
+		nums = append(nums, node.Val)
+	}
+	return SortedArrayToBST(nums)
+}

@@ -239,3 +239,27 @@ func TestLevelOrderBottom(t *testing.T) {
 	}
 
 }
+
+func TestSortedArrayToBST(t *testing.T) {
+	type testData struct {
+		nums []int
+		res  []interface{}
+	}
+
+	datas := []*testData{
+		{
+			nums: []int{-10, -3, 0, 5, 9},
+			res:  []interface{}{0, -10, 5, nil, -3, nil, 9},
+		},
+		{
+			nums: []int{1, 3},
+			res:  []interface{}{1, nil, 3},
+		},
+	}
+
+	for _, data := range datas {
+		node := SortedArrayToBST(data.nums)
+		res := treeNodeDump(node)
+		assert.Equal(t, data.res, res)
+	}
+}
