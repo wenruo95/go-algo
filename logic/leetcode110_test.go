@@ -76,3 +76,74 @@ func TestMinDepth(t *testing.T) {
 	}
 
 }
+
+func TestHasPathSum(t *testing.T) {
+
+	type testData struct {
+		list   []interface{}
+		target int
+		has    bool
+	}
+
+	datas := []*testData{
+		{
+			list:   []interface{}{5, 4, 8, 11, nil, 13, 4, 7, 2, nil, nil, nil, 1},
+			target: 22,
+			has:    true,
+		},
+		{
+			list:   []interface{}{1, 2, 3},
+			target: 5,
+			has:    false,
+		},
+		{
+			list:   []interface{}{},
+			target: 0,
+			has:    false,
+		},
+		{
+			list:   []interface{}{1, 2},
+			target: 1,
+			has:    false,
+		},
+	}
+	for _, data := range datas {
+		node := genTreeNode(data.list)
+		has := HasPathSum(node, data.target)
+		assert.Equal(t, data.has, has)
+	}
+
+}
+
+func TestPathSum(t *testing.T) {
+
+	type testData struct {
+		list   []interface{}
+		target int
+		res    [][]int
+	}
+
+	datas := []*testData{
+		{
+			list:   []interface{}{5, 4, 8, 11, nil, 13, 4, 7, 2, nil, nil, 5, 1},
+			target: 22,
+			res:    [][]int{{5, 4, 11, 2}, {5, 8, 4, 5}},
+		},
+		{
+			list:   []interface{}{1, 2, 3},
+			target: 5,
+			res:    [][]int{},
+		},
+		{
+			list:   []interface{}{1, 2},
+			target: 0,
+			res:    [][]int{},
+		},
+	}
+	for _, data := range datas {
+		node := genTreeNode(data.list)
+		res := PathSum(node, data.target)
+		assert.Equal(t, data.res, res)
+	}
+
+}

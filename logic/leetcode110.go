@@ -34,3 +34,42 @@ func MinDepth(root *TreeNode) int {
 	}
 	return intMin(left, right) + 1
 }
+
+// leetcode 112: https://leetcode.com/problems/path-sum/
+func HasPathSum(root *TreeNode, targetSum int) bool {
+	if root == nil {
+		return false
+	}
+	if root.Val == targetSum && (root.Left == nil && root.Right == nil) {
+		return true
+	}
+	return HasPathSum(root.Left, targetSum-root.Val) ||
+		HasPathSum(root.Right, targetSum-root.Val)
+}
+
+// leetcode 113: https://leetcode.com/problems/path-sum-ii/
+func PathSum(root *TreeNode, targetSum int) [][]int {
+
+	var findPath func(node *TreeNode, target int) [][]int
+	findPath = func(node *TreeNode, target int) [][]int {
+		if node == nil {
+			return [][]int{}
+		}
+		if node.Val == target && node.Left == nil && node.Right == nil {
+			return [][]int{{node.Val}}
+		}
+		lres := findPath(node.Left, target-node.Val)
+		rres := findPath(node.Right, target-node.Val)
+
+		res := make([][]int, 0)
+		for i := 0; i < len(lres); i++ {
+			res = append(res, append([]int{node.Val}, lres[i]...))
+		}
+		for i := 0; i < len(rres); i++ {
+			res = append(res, append([]int{node.Val}, rres[i]...))
+		}
+
+		return res
+	}
+	return findPath(root, targetSum)
+}
