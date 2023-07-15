@@ -199,3 +199,66 @@ func byteArr2Str(arr [][]byte) string {
 	}
 	return strings.Join(l, ",")
 }
+
+func genTreeNode(list []interface{}) *TreeNode {
+	if len(list) == 0 || list[0] == nil {
+		return nil
+	}
+
+	root := new(TreeNode)
+	root.Val = list[0].(int)
+
+	queue := NewQueue()
+	queue.Push(root)
+
+	index := 0
+	for queue.Size() > 0 && index < len(list) {
+		node := queue.Pop().(*TreeNode)
+
+		index = index + 1
+		if index < len(list) && list[index] != nil {
+			node.Left = &TreeNode{Val: list[index].(int)}
+			queue.Push(node.Left)
+		}
+		index = index + 1
+		if index < len(list) && list[index] != nil {
+			node.Right = &TreeNode{Val: list[index].(int)}
+			queue.Push(node.Right)
+		}
+	}
+
+	return root
+}
+
+func dumpTreeNode(root *TreeNode) []interface{} {
+	list := make([]interface{}, 0)
+	if root == nil {
+		return list
+	}
+	queue := NewQueue()
+	queue.Push(root)
+
+	for queue.Size() > 0 {
+		item := queue.Pop().(*TreeNode)
+		if item == nil {
+			list = append(list, nil)
+			continue
+		}
+
+		list = append(list, item.Val)
+		if item.Left == nil && item.Right == nil {
+			continue
+		}
+		queue.Push(item.Left)
+		queue.Push(item.Right)
+	}
+
+	return list
+}
+
+func nodeval(val *TreeNode) interface{} {
+	if val == nil {
+		return nil
+	}
+	return val.Val
+}

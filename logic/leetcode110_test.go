@@ -56,14 +56,7 @@ func TestMinDepth(t *testing.T) {
 			depth: 2,
 		},
 		{
-			list: []interface{}{
-				2,
-				nil, 3,
-				nil, nil, nil, 4,
-				nil, nil, nil, nil, nil, nil, nil, 5,
-				nil, nil, nil, nil, nil, nil, nil, nil,
-				nil, nil, nil, nil, nil, nil, nil, 6,
-			},
+			list:  []interface{}{2, nil, 3, nil, 4, nil, 6, nil, 6},
 			depth: 5,
 		},
 	}
@@ -146,4 +139,51 @@ func TestPathSum(t *testing.T) {
 		assert.Equal(t, data.res, res)
 	}
 
+}
+
+func TestFlattern(t *testing.T) {
+	type testData struct {
+		list []interface{}
+		res  []interface{}
+	}
+
+	datas := []*testData{
+		{
+			list: []interface{}{1, 2, 5, 3, 4, nil, 6},
+			res:  []interface{}{1, nil, 2, nil, 3, nil, 4, nil, 5, nil, 6},
+		},
+		{
+			list: []interface{}{},
+			res:  []interface{}{},
+		},
+
+		{
+			list: []interface{}{1},
+			res:  []interface{}{1},
+		},
+	}
+
+	for _, data := range datas {
+		root := genTreeNode(data.list)
+		Flatten(root)
+		rootList := dumpTreeNode(root)
+		assert.Equal(t, data.res, rootList)
+	}
+
+}
+
+func TestNumDistinct(t *testing.T) {
+	type testData struct {
+		s, t string
+		res  int
+	}
+
+	datas := []*testData{
+		{s: "rabbbit", t: "rabbit", res: 3},
+		{s: "babgbag", t: "bag", res: 5},
+	}
+	for _, data := range datas {
+		res := NumDistinct(data.s, data.t)
+		assert.Equal(t, data.res, res)
+	}
 }

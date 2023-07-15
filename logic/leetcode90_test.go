@@ -144,30 +144,6 @@ func TestIsInterleave(t *testing.T) {
 	}
 
 }
-func genTreeNode(list []interface{}) *TreeNode {
-	if len(list) == 0 || list[0] == nil {
-		return nil
-	}
-
-	nodes := make([]*TreeNode, len(list))
-	for i := len(list) - 1; i >= 0; i-- {
-		v := list[i]
-		if v == nil {
-			continue
-		}
-
-		node := &TreeNode{Val: v.(int)}
-		if li := 2*i + 1; li < len(list) {
-			node.Left = nodes[li]
-		}
-		if ri := 2*i + 2; ri < len(list) {
-			node.Right = nodes[ri]
-		}
-		nodes[i] = node
-	}
-
-	return nodes[0]
-}
 
 func TestIsValidBST(t *testing.T) {
 

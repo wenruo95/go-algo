@@ -1,5 +1,9 @@
 package logic
 
+import (
+	"strconv"
+)
+
 // leetcode 110: https://leetcode.com/problems/balanced-binary-tree/
 func IsBalanced(root *TreeNode) bool {
 	var height func(node *TreeNode) int
@@ -72,4 +76,102 @@ func PathSum(root *TreeNode, targetSum int) [][]int {
 		return res
 	}
 	return findPath(root, targetSum)
+}
+
+// leetcode 114: https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+func Flatten(root *TreeNode) {
+	validNode := func(nodes ...*TreeNode) *TreeNode {
+		for _, node := range nodes {
+			if node != nil {
+				return node
+			}
+		}
+		return nil
+	}
+	var reorder func(node *TreeNode) (*TreeNode, *TreeNode)
+
+	reorder = func(node *TreeNode) (*TreeNode, *TreeNode) {
+		if node == nil {
+			return nil, nil
+		}
+
+		lfirst, llast := reorder(node.Left)
+		rfirst, rlast := reorder(node.Right)
+		if node.Left != nil {
+			node.Left = nil
+			node.Right = lfirst
+		}
+		llast = validNode(llast, node)
+		if node.Right != nil {
+			llast.Left = nil
+			llast.Right = rfirst
+		}
+
+		return node, validNode(rlast, llast, node)
+	}
+
+	reorder(root)
+}
+
+// leetcode 115: https://leetcode.com/problems/distinct-subsequences/
+func NumDistinct(s string, t string) int {
+
+	memo := make(map[string]int)
+
+	var dp func(si, ti int) int
+	dp = func(si, ti int) int {
+		if ti == len(t) {
+			return 1
+		}
+		if si >= len(s) {
+			return 0
+		}
+
+		key := strconv.Itoa(si) + "_" + strconv.Itoa(ti)
+		if value, exist := memo[key]; exist {
+			return value
+		}
+
+		var res int
+		if s[si] == t[ti] {
+			res = dp(si+1, ti+1) + dp(si+1, ti)
+		} else {
+			res = dp(si+1, ti)
+		}
+		memo[key] = res
+		return res
+	}
+
+	return dp(0, 0)
+}
+
+type B116Node struct {
+	Val   int
+	Left  *B116Node
+	Right *B116Node
+	Next  *B116Node
+}
+
+// leetcode 116: https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
+func Connect(root *B116Node) *B116Node {
+	if root == nil {
+		return root
+	}
+	queue := NewQueue()
+	queue.Push(root)
+	for queue.Size() > 0 {
+		size := queue.Size()
+		for i := 0; i < size; i++ {
+			node := queue.Pop().(*B116Node)
+			if i != size-1 {
+				node.Next = queue.Top().(*B116Node)
+			}
+			if node.Left == nil || node.Right == nil {
+				continue
+			}
+			queue.Push(node.Left)
+			queue.Push(node.Right)
+		}
+	}
+	return root
 }
