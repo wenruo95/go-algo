@@ -40,3 +40,21 @@ func MaxProfit3(prices []int) int {
 	}
 	return profit
 }
+
+// leetcode 122: https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii
+func StockIIMaxProfit(prices []int) int {
+	n := len(prices)
+	dp := make([][]int, n)
+	dp[0] = []int{0, -prices[0]}
+	for day := 1; day < n; day++ {
+		dp[day] = []int{max(dp[day-1][0], dp[day-1][1]+prices[day]), max(dp[day-1][1], dp[day-1][0]-prices[day])}
+	}
+	return dp[n-1][0]
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}

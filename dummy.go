@@ -15,5 +15,4 @@ import (
 	_ "github.com/wenruo95/go-algo/logic"
 	_ "github.com/wenruo95/go-algo/node"
 	_ "github.com/wenruo95/go-algo/tree"
-	_ "github.com/wenruo95/go-algo/usage"
 )
